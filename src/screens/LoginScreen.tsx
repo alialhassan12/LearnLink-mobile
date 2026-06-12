@@ -69,15 +69,15 @@ export default function LoginScreen(){
                         <Image className="w-[300px] h-[300px] rounded-lg" source={require("../../assets/images/authImage.png")} />
                     </View>
                     <View className="flex flex-col items-center justify-center gap-2 mt-4 ">
-                        <Text className="font-bold text-3xl">Welcome Back 👋</Text>
-                        <Text className="text-base  text-center text-neutral-500 ">
+                        <Text className="font-bold text-3xl text-text-strong">Welcome Back 👋</Text>
+                        <Text className="text-base  text-center text-text-weak ">
                             Continue your learning journey and connect with expert teachers.
                             Or Continue your teaching journey and help students grow.
                         </Text>
                     </View>
                     {/* form */}
                     <View className="flex flex-col gap-2 mt-5 justify-start items-start">
-                        <Text className="font-semibold text-black/80 text-sm">Email Address</Text>
+                        <Text className="font-semibold text-text-weak text-sm">Email Address</Text>
                         <Input 
                             placeholder="JohnDoe@example.com" 
                             placeholderTextColor={"#666"} 
@@ -90,7 +90,7 @@ export default function LoginScreen(){
                         {error.email && (
                             <Text className="text-red-500 text-sm">{error.email}</Text>
                         )}
-                        <Text className="font-semibold text-black/80 text-sm">Password</Text>
+                        <Text className="font-semibold text-text-weak text-sm">Password</Text>
                         <View className="relative w-full">
                             <Input 
                                 placeholder="••••••••••••••••" 
@@ -111,7 +111,7 @@ export default function LoginScreen(){
                         <Pressable  
                             onPress={handleLogin} 
                             disabled={isloggingIn}
-                            className="w-full bg-blue-400 active:bg-blue-400/70 transition-all duration-100 rounded-2xl py-3"
+                            className="w-full bg-primary active:bg-blue-800/70 transition-all duration-100 rounded-2xl py-3 mt-4"
                         >   
                             {
                                 isloggingIn?(
@@ -126,9 +126,9 @@ export default function LoginScreen(){
                         </Pressable>
 
                         <View className="flex flex-row items-center justify-center gap-2 mt-2 w-full">
-                            <Text className="text-black/80 text-sm">Don't have an account?</Text>
+                            <Text className="text-text-weak text-sm">Don't have an account?</Text>
                             <Pressable className="cursor-pointer" onPress={()=>router.push('/Register')}>
-                                <Text className="text-blue-400 font-semibold text-sm">Register</Text>
+                                <Text className="text-primary font-semibold text-sm">Register</Text>
                             </Pressable>
                         </View>
                     </View>

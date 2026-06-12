@@ -127,13 +127,13 @@ export default function RegisterScreen(){
                         <Image className="w-[300px] h-[300px] rounded-lg" source={require("../../assets/images/authImage.png")} />
                     </View>
                     <View className="flex flex-col items-center justify-center gap-2 mt-4 ">
-                        <Text className="font-bold text-3xl">Create Your Account</Text>
-                        <Text className="text-base  text-center text-neutral-500 ">
+                        <Text className="font-bold text-3xl text-text-strong">Create Your Account</Text>
+                        <Text className="text-base  text-center text-text-weak ">
                             Join LearnLink as a student or teacher and start your educational journey.
                         </Text>
                     </View>
 
-                    <Text className="font-semibold text-black/80 text-sm mt-2">I want to...</Text>
+                    <Text className="font-semibold text-text-weak text-sm mt-2">I want to...</Text>
                     {/* Role Selection Cards */}
                     <RoleSelector 
                         selectedRole={selectedRole} 
@@ -146,7 +146,7 @@ export default function RegisterScreen(){
                     {/* form */}
                     <View className="flex flex-col gap-2 mt-5 justify-start items-start">
                         {/* name field */}
-                        <Text className="font-semibold text-black/80 text-sm">Full Name</Text>
+                        <Text className="font-semibold text-text-weak text-sm">Full Name</Text>
                         <View className="relative w-full">
                             <Input 
                                 placeholder="John Doe"
@@ -162,7 +162,7 @@ export default function RegisterScreen(){
                             <Text className="text-red-500 text-sm">{error.name}</Text>
                         )}
                         {/* email field */}
-                        <Text className="font-semibold text-black/80 text-sm">Email Address</Text>
+                        <Text className="font-semibold text-text-weak text-sm">Email Address</Text>
                         <View className="relative w-full">
                             <Input 
                                 value={formData.email}
@@ -178,7 +178,7 @@ export default function RegisterScreen(){
                             <Text className="text-red-500 text-sm">{error.email}</Text>
                         )}
                         {/* password field */}
-                        <Text className="font-semibold text-black/80 text-sm">Password</Text>
+                        <Text className="font-semibold text-text-weak text-sm">Password</Text>
                         <View className="relative w-full">
                             <Input 
                                 value={formData.password}
@@ -197,7 +197,7 @@ export default function RegisterScreen(){
                             <Text className="text-red-500 text-sm">{error.password}</Text>
                         )}
                         {/* passord confirmation field */}
-                        <Text className="font-semibold text-black/80 text-sm">Confirm Password</Text>
+                        <Text className="font-semibold text-text-weak text-sm">Confirm Password</Text>
                         <View className="relative w-full">
                             <Input 
                                 value={formData.password_confirmation}
@@ -217,7 +217,7 @@ export default function RegisterScreen(){
                         )}
                         <Pressable  
                             onPress={handleRegister} 
-                            className={isRegistering ? "w-full bg-blue-400/50 active:bg-blue-400/50 transition-all duration-100 rounded-2xl py-3" : "w-full bg-blue-400 active:bg-blue-400/70 transition-all duration-100 rounded-2xl py-3"}
+                            className="w-full bg-primary active:bg-blue-800/70 transition-all duration-100 rounded-2xl py-3 mt-4"
                             disabled={isRegistering}
                         >   
                             {
@@ -227,9 +227,9 @@ export default function RegisterScreen(){
                             }
                         </Pressable>
                         <View className="flex flex-row items-center justify-center gap-2 mt-2 w-full mb-10">
-                            <Text className="text-black/80 text-sm">Already have an account?</Text>
+                            <Text className="text-text-weak text-sm">Already have an account?</Text>
                             <Pressable className="cursor-pointer" onPress={()=>router.replace('/Login')}>
-                                <Text className="text-blue-400 font-semibold text-sm">Login</Text>
+                                <Text className="text-primary font-semibold text-sm">Login</Text>
                             </Pressable>
                         </View>
                     </View>

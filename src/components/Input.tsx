@@ -25,7 +25,7 @@ export default function Input({
             onChangeText={onChangeText}
             editable={!disabled}
             placeholderTextColor={placeholderTextColor} 
-            className={`rounded-lg p-4 w-full bg-gray-200/70 ${className}`}
+            className={`rounded-lg p-4 w-full bg-bg-2 border border-border text-text-strong ${className}`}
             placeholder={placeholder}
             secureTextEntry={secureTextEntry}
             keyboardType={keyboardType as any}

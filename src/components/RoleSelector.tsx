@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useTheme } from "../providers/ThemeProvider";
 
 export type Role = "student" | "teacher";
 
@@ -10,14 +11,18 @@ interface RoleSelectorProps {
 }
 
 export default function RoleSelector({ selectedRole, onSelectRole }: RoleSelectorProps) {
+  const {isDark}=useTheme();
+  const primaryColor = isDark ? "#3b82f6" : "#2563eb";
+  const secondaryColor = isDark ? "#1e293b" : "#f8fafc";
+
   return (
     <View className="w-full flex-row gap-4 mt-2">
       {/* Learn / Student Card */}
       <Pressable
         onPress={() => onSelectRole("student")}
-        className={`flex-1 p-5 rounded-[28px] border-2 bg-white transition-all duration-200 ${
+        className={`flex-1 p-5 rounded-[28px] border border-border bg-bg-1 transition-all duration-200 ${
           selectedRole === "student"
-            ? "border-indigo-600/80 shadow-md shadow-indigo-600/30 scale-[1.02]"
+            ? "border-primary shadow-md shadow-indigo-600/30 scale-[1.02]"
             : "border-slate-100/80 shadow-sm shadow-black/5"
         }`}
         style={{
@@ -29,15 +34,15 @@ export default function RoleSelector({ selectedRole, onSelectRole }: RoleSelecto
         }}
       >
         {/* Icon Container */}
-        <View className="w-12 h-12 rounded-full items-center justify-center bg-[#EEEDFC]">
-          <FontAwesome5 name="graduation-cap" size={20} color="#4f46e5" />
+        <View className="w-12 h-12 rounded-full items-center justify-center bg-bg-2">
+          <FontAwesome5 name="graduation-cap" size={20} color={primaryColor} />
         </View>
 
         {/* Title */}
-        <Text className="text-xl font-bold text-slate-800 mt-4">Learn</Text>
+        <Text className="text-xl font-bold text-text-strong mt-4">Learn</Text>
 
         {/* Description */}
-        <Text className="text-xs text-slate-500 mt-1.5 leading-4">
+        <Text className="text-xs text-text-weak mt-1.5 leading-4">
           Enroll in courses & learn from experts.
         </Text>
       </Pressable>
@@ -45,9 +50,9 @@ export default function RoleSelector({ selectedRole, onSelectRole }: RoleSelecto
       {/* Teach / Teacher Card */}
       <Pressable
         onPress={() => onSelectRole("teacher")}
-        className={`flex-1 p-5 rounded-[28px] border-2 bg-white transition-all duration-200 ${
+        className={`flex-1 p-5 rounded-[28px] border border-border bg-bg-1 transition-all duration-200 ${
           selectedRole === "teacher"
-            ? "border-sky-500/80 shadow-md shadow-sky-500/30 scale-[1.02]"
+            ? "border-primary shadow-md shadow-sky-500/30 scale-[1.02]"
             : "border-slate-100/80 shadow-sm shadow-black/5"
         }`}
         style={{
@@ -59,12 +64,12 @@ export default function RoleSelector({ selectedRole, onSelectRole }: RoleSelecto
         }}
       >
         {/* Icon Container */}
-        <View className="w-12 h-12 rounded-full items-center justify-center bg-[#EAF5FC]">
-          <FontAwesome5 name="chalkboard-teacher" size={20} color="#0284c7" />
+        <View className="w-12 h-12 rounded-full items-center justify-center bg-bg-2">
+          <FontAwesome5 name="chalkboard-teacher" size={20} color={primaryColor} />
         </View>
 
         {/* Title */}
-        <Text className="text-xl font-bold text-slate-800 mt-4">Teach</Text>
+        <Text className="text-xl font-bold text-text-strong mt-4">Teach</Text>
 
         {/* Description */}
         <Text className="text-xs text-slate-500 mt-1.5 leading-4">
