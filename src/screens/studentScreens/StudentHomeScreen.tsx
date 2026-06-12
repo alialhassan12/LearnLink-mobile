@@ -1,6 +1,7 @@
 import useAuthStore from "@/src/store/authStore";
 import { router } from "expo-router";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function StudentHomeScreen(){
     const {authUser,logout,isLoggingout}=useAuthStore();
@@ -11,14 +12,14 @@ export default function StudentHomeScreen(){
         }
     }
     return(
-        <View className="flex-1 items-center justify-center text-text-strong">
-            <Text className="text-text-weak">Student Home Page</Text>
-            <Text className="text-text-weak">{authUser?.name}</Text>
-            <Text className="text-text-weak">{authUser?.role}</Text>
-
-            <Pressable className="bg-red-500 px-4 py-2 rounded-lg" onPress={handleLogout}>
-                <Text className="text-white text-center">Logout</Text>
-            </Pressable>
-        </View>
+        <SafeAreaView className="flex-1 w-full" edges={["top","bottom"]}>
+            <ScrollView 
+                className="px-4" 
+                contentContainerStyle={{flexGrow:1}}
+                showsVerticalScrollIndicator={false}
+            >
+                
+            </ScrollView>
+        </SafeAreaView>
     );
 }

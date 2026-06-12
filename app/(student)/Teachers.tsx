@@ -1,9 +1,7 @@
-import { Text, View } from "react-native";
+import TeachersScreen from "@/src/screens/studentScreens/TeachersScreen";
 
 export default function Teachers(){
     return(
-        <View>
-            <Text className="text-text-strong">Teachers Page</Text>
-        </View>
+        <TeachersScreen/>
     );
 }
