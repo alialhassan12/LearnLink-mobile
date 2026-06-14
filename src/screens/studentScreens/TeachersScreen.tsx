@@ -2,6 +2,7 @@ import Input from "@/src/components/Input";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import { useBrowseStore } from "@/src/store/studentStores/browseStore";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { useEffect, useRef } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
@@ -124,9 +125,12 @@ export default function TeachersScreen(){
                                         {/* buttons */}
                                         <View className="w-full mt-4 gap-2">
                                             <Pressable
+                                                onPress={()=>router.push(`/TeacherProfile?id=${teacher.id}`)}
                                                 className="w-full border border-primary text-primary py-3 rounded-lg items-center active:bg-primary active:scale-95 transition-all duration-300 group"
                                             >
-                                                <Text className="text-primary text-md font-bold group-active:text-text-strong transition-all duration-300">View Profile</Text>
+                                                <Text className="text-primary text-md font-bold group-active:text-text-strong transition-all duration-300">
+                                                    View Profile
+                                                </Text>
                                             </Pressable>
                                             <Pressable
                                                 className="w-full bg-primary  text-white py-3 rounded-lg items-center active:bg-transparent active:scale-95 transition-all duration-300 group"

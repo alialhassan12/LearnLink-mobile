@@ -15,10 +15,13 @@ export default function StudentLayout(){
                     let iconName;
                     if(route.name === "Home"){
                         iconName=focused ? "home" : "home-outline";
-                    }else if(route.name === "Teachers"){
+                    }else if(route.name === "(Teachers)"){
+                        
                         iconName=focused ? "people" : "people-outline";
                     }else if(route.name === "Courses"){
                         iconName=focused ? "book" : "book-outline";
+                    }else if(route.name === "(Library)"){
+                        iconName=focused ? "library" : "library-outline";
                     }
                     return <Ionicons name={iconName as any} size={20} color={focused ? primaryColor : inactiveColor} />;
                 },
@@ -42,7 +45,12 @@ export default function StudentLayout(){
                 headerShown:true,
                 header:()=><Header/>,
                 animation:"shift"
-            })}/>
+            })}>
+                <Tabs.Screen name="Home"/>
+                <Tabs.Screen name="(Teachers)" options={{title:"Teachers"}} />
+                <Tabs.Screen name="Courses"/>
+                <Tabs.Screen name="(Library)" options={{title:"Library"}}/>
+            </Tabs>
         </>
     );
 }
