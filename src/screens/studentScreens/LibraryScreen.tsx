@@ -17,7 +17,7 @@ export default function LibraryScreen() {
     const cards = [
         { id: 0, label: "My Learnings", icon: "book-open", navigation:"" },
         { id: 1, label: "My Bookings", icon: "calendar", navigation:"/MyBookings" },
-        { id: 2, label: "Live Sessions", icon: "video", navigation:"" },
+        { id: 2, label: "Live Sessions", icon: "video", navigation:"/LiveSessions" },
     ];
 
     return (
@@ -27,12 +27,18 @@ export default function LibraryScreen() {
             showsVerticalScrollIndicator={false}
         >
 
-        <View className="flex flex-row items-center gap-4 p-6 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl mb-6">
-            <Image
-                source={{ uri: authUser?.avatar as string}}
-                className="w-16 h-16 rounded-full border-2 border-primary"
-            />
-            <Text className="text-2xl font-bold text-text-strong">
+        <View className="flex flex-row flex-wrap items-center gap-4 p-6 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl mb-6">
+            {!authUser?.avatar ? (
+                <View className="w-16 h-16 rounded-full border-2 border-primary flex items-center justify-center">
+                    <FontAwesome5 name="user" size={24} color={strongText} />
+                </View>
+            ) : (
+                <Image
+                    source={{ uri: authUser.avatar}}
+                    className="w-16 h-16 rounded-full border-2 border-primary"
+                />
+            )}
+            <Text className="text-xl font-bold text-text-strong">
                 Welcome back, {authUser?.name}
             </Text>
         </View>

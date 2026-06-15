@@ -18,7 +18,11 @@ export default function StudentHomeScreen(){
                 contentContainerStyle={{flexGrow:1}}
                 showsVerticalScrollIndicator={false}
             >
-                
+                <Pressable onPress={()=>{handleLogout()}}>
+                    <Text className="text-md text-text-strong font-bold flex flex-row items-center gap-2">
+                        Logout
+                    </Text>
+                </Pressable>
             </ScrollView>
         </SafeAreaView>
     );

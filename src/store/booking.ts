@@ -2,23 +2,38 @@ import {create} from "zustand";
 import { Booking } from "../@types/booking";
 import axiosInstance from "../lib/axios";
 import Toast from "react-native-toast-message";
+import { PaginationData } from "../@types/paginationData";
 
 interface BookingStoreState{
     newBooking:Booking | null;
+    studentBookings:Booking[];
 
     isCreatingBooking:boolean;
     createBooking:(booking:Booking)=>Promise<void>;
+
+    isGettingStudentBookings:boolean;
+    getStudentBookings:(page?:number)=>Promise<void>;
+    studentBookingsPagination:PaginationData | null;
 }
 
 const useBookingStore=create<BookingStoreState>((set)=>({
     newBooking:null,
+    studentBookings:[],
+    studentBookingsPagination:null,
 
     isCreatingBooking:false,
     createBooking:async(booking:Booking)=>{
         set({isCreatingBooking:true});
         try{
             const response=await axiosInstance.post('/booking/new-booking',booking);
-            set({newBooking:response.data.booking});
+            set((state)=>{
+                const newBooking=response.data.booking;
+                const studentBookings=[newBooking,...state.studentBookings];
+                return {
+                    newBooking:newBooking,
+                    studentBookings:studentBookings
+                }
+            });
             Toast.show({
                 type:'success',
                 text1:'Booking created successfully',
@@ -33,6 +48,22 @@ const useBookingStore=create<BookingStoreState>((set)=>({
             });
         } finally{
             set({isCreatingBooking:false});
+        }
+    },
+
+    isGettingStudentBookings:false,
+    getStudentBookings:async(page=1)=>{
+        set({isGettingStudentBookings:true});
+        try {
+            const response=await axiosInstance.get(`/bookings/student-bookings?page=${page}`);
+            set({
+                studentBookings:response.data.bookings.data,
+                studentBookingsPagination:response.data.pagination
+            });
+        } catch (error:any) {
+            console.error(error.response?.data?.message);
+        }finally{
+            set({isGettingStudentBookings:false});
         }
     }
 }));

@@ -36,8 +36,8 @@ export default function Header(){
                                     <Image source={{uri:authUser?.avatar}} className="w-full h-full"/>
                                 </View>
                             ) : (
-                                <View className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-400 ">
-                                    <Text className="text-neutral-500 font-bold text-sm">{authUser?.name?.charAt(0).toUpperCase()}</Text>
+                                <View className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-400/20 border border-border ">
+                                    <Text className="text-text-weak font-bold text-sm">{authUser?.name?.charAt(0).toUpperCase()}</Text>
                                 </View>
                             )
                         }

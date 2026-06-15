@@ -5,4 +5,5 @@ export interface PaginationData{
     total:number;
     from:number;
     to:number;
+    has_more?:boolean;
 }
