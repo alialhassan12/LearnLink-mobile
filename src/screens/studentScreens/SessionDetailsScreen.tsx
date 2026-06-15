@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from "react-native";
 import {File,Paths} from "expo-file-system";
 import * as Sharing from "expo-sharing";
+import { router } from "expo-router";
 
 export default function SessionDetailsScreen(){
     const {authUser}=useAuthStore();
@@ -15,7 +16,7 @@ export default function SessionDetailsScreen(){
     const strongText = isDark ? "#f8fafc" : "#0f172a";
     const searchParams=useSearchParams();
     const sessionId=searchParams.get("sessionId");
-    const {studentSelectedSession,getStudentSelectedSession,isGettingStudentSelectedSession}=useLiveSessionStore();
+    const {studentSelectedSession,getStudentSelectedSession,isGettingStudentSelectedSession,getToken,isGettingToken}=useLiveSessionStore();
     
     const scrollRef=useRef<ScrollView>(null);
     const [downloading, setDownloading] = useState<boolean>(false);
@@ -26,6 +27,18 @@ export default function SessionDetailsScreen(){
             getStudentSelectedSession(Number(sessionId));
         }
     },[getStudentSelectedSession,sessionId]);
+
+    // handle start session
+    const handleStartSession=async()=>{
+        if(sessionId){
+            const roomName=`session-${sessionId}`;
+            await getToken(roomName,Number(sessionId));
+            const {token}=useLiveSessionStore.getState();
+            if(token){
+                router.push('/SessionRoom');
+            }
+        }
+    }
 
     const downloadFile=async(fileUrl:string,fileName:string)=>{
         try{
@@ -81,18 +94,24 @@ export default function SessionDetailsScreen(){
 
                 <View className="flex-col w-full gap-2">
                     <Pressable
-                        // onPress={()=>router.push(`/SessionDetails?sessionId=${nextSession?.id}`)}
+                        onPress={()=>handleStartSession()}
                         className="h-16 bg-[#4338F2] rounded-2xl flex-row items-center justify-center gap-3 active:opacity-90 active:scale-95 transition-all duration-200 ease-in-out"
                     >
-                        <Text className="text-white text-xl font-bold">
-                            Join Session
-                        </Text>
+                        {isGettingToken?(
+                            <ActivityIndicator size={32} color={"white"} />
+                        ):(
+                            <>
+                                <Text className="text-white text-xl font-bold">
+                                    Join Session
+                                </Text>
 
-                        <Ionicons
-                            name="arrow-forward"
-                            size={22}
-                            color="white"
-                        />
+                                <Ionicons
+                                    name="arrow-forward"
+                                    size={22}
+                                    color="white"
+                                />
+                            </>
+                        )}
                     </Pressable>
                     <Pressable className="flex flex-row justify-center items-center rounded-2xl bg-bg-1  py-3 w-full border border-primary active:bg-primary active:border-none active:scale-95 transition-all duration-300 group">
                         <Ionicons name="chatbubble" size={16} color={primaryColor} />

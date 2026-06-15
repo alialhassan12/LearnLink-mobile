@@ -5,6 +5,7 @@ export default function LiveSessionsLayout(){
         <Stack screenOptions={{headerShown:false}}>
             <Stack.Screen name="LiveSessions"/>
             <Stack.Screen name="SessionDetails"/>
+            <Stack.Screen name="SessionRoom"/>
         </Stack>
     );
 }
