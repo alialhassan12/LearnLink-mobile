@@ -1,18 +1,11 @@
 import {
     createContext,
     useContext,
-    useEffect,
-    useState,
 } from "react";
 
 import { useColorScheme } from "nativewind";
 
-
-import {
-    ThemeProvider as NavigationProvider,
-    DefaultTheme,
-    DarkTheme,
-} from "@react-navigation/native";
+import { ThemeProvider as NavigationProvider } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
 interface ThemeContextType {
@@ -23,26 +16,38 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
 const CustomLightTheme = {
-    ...DefaultTheme,
+    dark: false,
+    fonts: {
+        regular: { fontFamily: "System", fontWeight: "400" as const },
+        medium: { fontFamily: "System", fontWeight: "500" as const },
+        bold: { fontFamily: "System", fontWeight: "700" as const },
+        heavy: { fontFamily: "System", fontWeight: "900" as const },
+    },
     colors: {
-        ...DefaultTheme.colors,
         primary: "#2563eb",      // --primary (sapphire blue)
         background: "#ffffff",   // --bg-1 (pure white)
         card: "#f8fafc",         // --bg-2 (slate-50)
         text: "#0f172a",         // --text-strong (deep slate)
         border: "#e2e8f0",       // --border (slate-200)
+        notification: "#ef4444",
     },
 };
 
 const CustomDarkTheme = {
-    ...DarkTheme,
+    dark: true,
+    fonts: {
+        regular: { fontFamily: "System", fontWeight: "400" as const },
+        medium: { fontFamily: "System", fontWeight: "500" as const },
+        bold: { fontFamily: "System", fontWeight: "700" as const },
+        heavy: { fontFamily: "System", fontWeight: "900" as const },
+    },
     colors: {
-        ...DarkTheme.colors,
         primary: "#3b82f6",      // --primary (vibrant blue)
         background: "#0f172a",   // --bg-1 (slate-900)
         card: "#1e293b",         // --bg-2 (slate-800)
         text: "#f8fafc",         // --text-strong (slate-50)
         border: "#334155",       // --border (slate-700)
+        notification: "#ef4444",
     },
 };
 

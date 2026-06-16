@@ -59,7 +59,7 @@ export default function LoginScreen(){
                 className="flex-1"
                 behavior={Platform.OS === "ios" ? "padding" : "padding"}
             >
-                <ScrollView 
+                <ScrollView
                     className="px-5" 
                     contentContainerStyle={{flexGrow:1}}
                     keyboardShouldPersistTaps="handled"

@@ -35,7 +35,7 @@ export default function SessionDetailsScreen(){
             await getToken(roomName,Number(sessionId));
             const {token}=useLiveSessionStore.getState();
             if(token){
-                router.push('/SessionRoom');
+                router.replace('/SessionRoom');
             }
         }
     }
