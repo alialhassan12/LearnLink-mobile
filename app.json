@@ -52,7 +52,8 @@
       "expo-secure-store",
       "@react-native-community/datetimepicker",
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      "@livekit/react-native-expo-plugin"
     ],
     "experiments": {
       "typedRoutes": true,

@@ -3,14 +3,13 @@ import { useLiveSessionStore } from "@/src/store/liveSessionsStore";
 import { useLocalParticipant, useRoomContext } from "@livekit/react-native";
 import { router } from "expo-router";
 import { Track, type LocalVideoTrack } from "livekit-client";
-import { useState } from "react";
 import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
 export default function ControlBar() {
-    const { isEndingSession, endSession, sessionId, clearSession } = useLiveSessionStore();
+    const { endSession, sessionId, clearSession } = useLiveSessionStore();
     const { authUser } = useAuthStore();
     const { localParticipant, isMicrophoneEnabled, isCameraEnabled } = useLocalParticipant();
     const room = useRoomContext();

@@ -1,17 +1,31 @@
+import { Teacher } from "@/src/@types/teahcer";
 import Input from "@/src/components/Input";
+import BookingCard from "@/src/components/student/BookingCard";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import { useBrowseStore } from "@/src/store/studentStores/browseStore";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
 export default function TeachersScreen(){
     const {isDark}=useTheme();
     const strongText = isDark ? "#f8fafc" : "#0f172a";
     const {teachers,isGettingTeachers,getTeachers,teachersPaginationData}=useBrowseStore();
+    const [openBookingCard,setOpenBookingCard]=useState<boolean>(false);
+    const [selectedTeacher,setSelectedTeacher] = useState<Teacher | null>(null);
 
     const scrollRef=useRef<ScrollView>(null);
+
+    const handleSetBookingState=(teacher:Teacher)=>{
+        setSelectedTeacher(teacher);
+        if(teacher){
+            setOpenBookingCard(true);
+        }else{
+            setOpenBookingCard(false);
+            setSelectedTeacher(null);
+        }
+    }
 
     useEffect(()=>{
         if(teachers.length===0){
@@ -133,6 +147,7 @@ export default function TeachersScreen(){
                                                 </Text>
                                             </Pressable>
                                             <Pressable
+                                                onPress={()=>handleSetBookingState(teacher)}
                                                 className="w-full bg-primary  text-white py-3 rounded-lg items-center active:bg-transparent active:scale-95 transition-all duration-300 group"
                                             >
                                                 <Text className="text-white text-md font-bold group-active:text-primary">Book Session</Text>
@@ -192,6 +207,9 @@ export default function TeachersScreen(){
                         </View>
                     </View>
                 )}
+                <View>
+                    <BookingCard teacher={selectedTeacher!} open={openBookingCard} setOpen={setOpenBookingCard} isModal={true} />
+                </View>
             </View>
         </ScrollView>
     );

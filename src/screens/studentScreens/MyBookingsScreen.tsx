@@ -2,6 +2,7 @@ import Skeleton from "@/src/components/Skeleton";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import useBookingStore from "@/src/store/booking";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Animated, Image, Pressable, ScrollView, Text, View } from "react-native";
 
@@ -94,7 +95,7 @@ export default function MyBookingsScreen(){
             <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{gap: 16}}
+                contentContainerStyle={{gap: 8}}
             >
                 {stats?.map((stat)=>{
                     return(
@@ -116,7 +117,7 @@ export default function MyBookingsScreen(){
             <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{gap: 16}}
+                contentContainerStyle={{gap: 8}}
             >
                 {filters.map((filter,index)=>{
                     return (
@@ -147,7 +148,9 @@ export default function MyBookingsScreen(){
                             </View>
                             <Text className="text-text-strong text-lg font-bold">No Bookings Yet</Text>
                             <Text className="text-text-weak text-center w-64">Book your first class to get started</Text>
-                            <Pressable className="mt-4 bg-primary px-6 py-3 rounded-full active:opacity-90 transition-opacity">
+                            <Pressable 
+                                onPress={()=>router.push("/(student)/(Teachers)/Teachers")}
+                                className="mt-4 bg-primary px-6 py-3 rounded-full active:opacity-90 transition-opacity">
                                 <Text className="text-white font-bold">Find a Teacher</Text>
                             </Pressable>
                         </View>
@@ -302,7 +305,7 @@ const BookingSkeleton=()=>{
         <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 16 }}
+            contentContainerStyle={{ gap: 8 }}
         >
             {[1, 2, 3].map((i) => (
             <View
@@ -331,7 +334,7 @@ const BookingSkeleton=()=>{
         <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 16 }}
+            contentContainerStyle={{ gap: 8 }}
         >
             {[1, 2, 3].map((i) => (
             <Skeleton
