@@ -50,7 +50,7 @@ const useAuthStore=create<useAuthStoreInterface>((set)=>({
         }
     },
 
-    isCheckingAuth:false,
+    isCheckingAuth:true,
     checkAuth:async()=>{
         set({isCheckingAuth:true});
 

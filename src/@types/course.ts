@@ -1,4 +1,5 @@
 import { Category } from "./category";
+import { CourseSection } from "./course_sections";
 import { Teacher } from "./teahcer";
 
 export interface Course{
@@ -17,4 +18,5 @@ export interface Course{
 
     category?:Category,
     teacher?:Teacher,
+    sections?:CourseSection[],
 }

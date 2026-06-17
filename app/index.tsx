@@ -3,12 +3,22 @@ import "../global.css";
 import { Redirect } from "expo-router";
 import { useEffect } from "react";
 import { View } from "react-native";
+import { useCourseEnrollmentStore } from "@/src/store/studentStores/courseEnrollmentStore";
 
 export default function Index() {
   const {isCheckingAuth,checkAuth,authUser}=useAuthStore();
+  const {getEnrolledCoursesIds}=useCourseEnrollmentStore();
+
+  const initialize=async()=>{
+    const isLoggedIn=await checkAuth();
+    if(isLoggedIn && useAuthStore.getState().authUser?.role === 'student'){
+      console.log("get enrolled course ids");
+      await getEnrolledCoursesIds();
+    }
+  }
 
   useEffect(()=>{
-    checkAuth();
+    initialize();
   },[]);
 
   if(isCheckingAuth){

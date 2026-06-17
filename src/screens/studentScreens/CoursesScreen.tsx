@@ -1,6 +1,8 @@
 import { useTheme } from "@/src/providers/ThemeProvider";
 import { useBrowseStore } from "@/src/store/studentStores/browseStore";
+import { useCourseEnrollmentStore } from "@/src/store/studentStores/courseEnrollmentStore";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { RelativePathString, router } from "expo-router";
 import { useEffect, useRef } from "react";
 import { View, Text, ScrollView, Pressable, Image } from "react-native";
 
@@ -8,6 +10,7 @@ export default function CoursesScreen(){
     const {isDark}=useTheme();
     const strongText = isDark ? "#f8fafc" : "#0f172a";
     const {courses,getCourses,isGettingCourses,coursesPaginationData}=useBrowseStore();
+    const {enrolledCoursesIds}=useCourseEnrollmentStore();
 
     const scrollRef=useRef<ScrollView>(null);
 
@@ -104,11 +107,30 @@ export default function CoursesScreen(){
                                         {/* price and enroll */}
                                         <View className="flex flex-row justify-between items-center mt-2">
                                             <Text className="text-primary text-lg font-bold">${course.price}</Text>
-                                            <Pressable
+                                            {enrolledCoursesIds.includes(course?.id as number)?(
+                                                <Pressable
+                                                    onPress={()=>{
+                                                        
+                                                    }}
+                                                    className="bg-transparent border border-border rounded-lg px-4 py-2 active:scale-95 transition-all duration-300"
+                                                >
+                                                    <Text className="text-text-strong font-bold">Go to course</Text>
+                                                </Pressable>
+                                            ):(
+                                                <Pressable
+                                                onPress={()=>{
+                                                    router.push({
+                                                        pathname:"/(student)/(Courses)/[CourseId]",
+                                                        params:{
+                                                            CourseId:course.id?.toString() as string
+                                                        }
+                                                    });
+                                                }}
                                                 className="bg-primary rounded-lg px-4 py-2 active:scale-95 transition-all duration-300"
                                             >
                                                 <Text className="text-white font-bold">Enroll</Text>
                                             </Pressable>
+                                            )}
                                         </View>
                                     </View>
                                 </View>

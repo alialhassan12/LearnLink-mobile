@@ -13,7 +13,7 @@ export default function RootLayout() {
   return (
     <ThemeProvider>
       <Stack screenOptions={{ headerShown: false}} ></Stack>
-      <Toast/>
+      <Toast />
     </ThemeProvider>
   );
 }

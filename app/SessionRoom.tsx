@@ -1,3 +1,4 @@
+import LiveKitComponentDocs from "@/src/components/LiveKitComponentDocs";
 import SessionRoomScreen from "@/src/screens/SessionRoomScreen";
 import { useLiveSessionStore } from "@/src/store/liveSessionsStore";
 import { Text, View } from "react-native";
@@ -17,5 +18,6 @@ export default function SessionRoom(){
             token={token}
             serverUrl={serverUrl}
         />
+        // <LiveKitComponentDocs serverUrl={serverUrl} token={token} />
     );
 }

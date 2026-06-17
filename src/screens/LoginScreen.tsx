@@ -7,10 +7,12 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import Input from "../components/Input";
 import Toast from "react-native-toast-message";
 import useAuthStore from "../store/authStore";
+import { useCourseEnrollmentStore } from "../store/studentStores/courseEnrollmentStore";
 
 
 export default function LoginScreen(){
     const {login,isloggingIn,authUser}=useAuthStore();
+    const {getEnrolledCoursesIds}=useCourseEnrollmentStore();
     const [showPassword,setShowPassword]=useState<boolean>(false);
     const [formData,setFormData]=useState<{
         email:string,
@@ -48,6 +50,7 @@ export default function LoginScreen(){
         if(success){
             const user = useAuthStore.getState().authUser;
             if(user?.role === 'student'){
+                getEnrolledCoursesIds();
                 router.replace('/(student)/Home');
             }
         }

@@ -7,13 +7,15 @@ import {
 } from "@livekit/react-native";
 import { Track } from "livekit-client";
 import { useMemo } from "react";
-import { FlatList, Text, View, Dimensions, StyleSheet } from "react-native";
+import { FlatList, Text, View, Dimensions, StyleSheet, Image } from "react-native";
 import ControlBar from "./sessionComponents/ControlBar";
 import { Ionicons } from "@expo/vector-icons";
+import useAuthStore from "../store/authStore";
 
 const { width, height } = Dimensions.get("window");
 
 export default function RoomUI() {
+    const {authUser}=useAuthStore();
     const participants = useParticipants();
 
     // Query camera tracks (with placeholders for participants whose camera is off)
@@ -72,10 +74,14 @@ export default function RoomUI() {
                                 isSpeaking && styles.avatarSpeaking,
                             ]}
                         >
-                            <Ionicons name="person" size={32} color="#94a3b8" />
+                            {item.participant?.name?(
+                                <Text style={styles.nameText}>{item.participant.name.charAt(0)}</Text>
+                            ):(
+                                <Ionicons name="person" size={32} color="#94a3b8" />
+                            )}
                         </View>
                         <Text style={styles.participantName}>{displayName}</Text>
-                        <Text style={styles.cameraOffLabel}>Camera Off</Text>
+                        {/* <Text style={styles.cameraOffLabel}>Camera Off</Text> */}
                     </View>
 
                     {/* Mute badge on top-right */}
@@ -274,6 +280,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderWidth: 1,
         borderColor: "rgba(255, 255, 255, 0.1)",
+        objectFit: "cover",
     },
 
     avatarSpeaking: {

@@ -96,7 +96,6 @@ export default function TeacherProfile(){
             contentContainerStyle={{flexGrow:1,paddingBottom:100}}
             showsVerticalScrollIndicator={false}
         >
-            {/* avatar, name, headline */}
             <View className="flex flex-col gap-4 justify-center items-center mt-12">
                 {/* avatar */}
                 <View className="w-52 h-52 rounded-full overflow-hidden border-4 border-primary">
