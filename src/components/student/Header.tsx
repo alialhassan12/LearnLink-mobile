@@ -31,9 +31,9 @@ export default function Header(){
                     {/* avatar */}
                     <View>
                         {
-                            authUser?.avatar ? (
+                            authUser?.avatar_url ? (
                                 <View className="w-10 h-10 rounded-full overflow-hidden">
-                                    <Image source={{uri:authUser?.avatar}} className="w-full h-full"/>
+                                    <Image source={{uri:authUser?.avatar_url}} className="w-full h-full"/>
                                 </View>
                             ) : (
                                 <View className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-400/20 border border-border ">

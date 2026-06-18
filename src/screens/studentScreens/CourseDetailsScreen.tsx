@@ -20,7 +20,7 @@ export default function CourseDetailsScreen(){
         }
     },[CourseId,getCourse]);
 
-    if(false){
+    if(isGettingCourse){
         return(
             <View className="flex justify-center items-center w-full h-full">
                 <ActivityIndicator size={"large"} color={primaryColor}/>
@@ -39,7 +39,7 @@ export default function CourseDetailsScreen(){
                 <View className="relative w-full h-48 rounded-2xl overflow-hidden">
                     {true?(
                         <Image
-                            source={{uri:course?.thumbnail as string}}
+                            source={{uri:course?.thumbnail_url as string}}
                             className="w-full h-full" />
                     ):(
                         <View className="w-full h-full flex justify-center items-center bg-b-2 border border-border">
@@ -86,10 +86,10 @@ export default function CourseDetailsScreen(){
                     <Text className="text-2xl font-bold text-text-strong">Meet Your Instructor</Text>
                     <View className="flex flex-col gap-3 p-3 border border-border rounded-2xl bg-bg-2 mt-3">
                         <View className="flex-row gap-2 items-center">
-                            {course?.teacher?.user?.avatar?(
+                            {course?.teacher?.user?.avatar_url?(
                                 <View className="w-16 h-16 rounded-2xl overflow-hidden">
                                     <Image
-                                        source={{uri:course?.teacher?.user?.avatar as string}}
+                                        source={{uri:course?.teacher?.user?.avatar_url as string}}
                                         className="w-full h-full"
                                     />
                                 </View>

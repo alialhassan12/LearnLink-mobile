@@ -1,7 +1,7 @@
 import { useTheme } from "@/src/providers/ThemeProvider";
 import { useBrowseStore } from "@/src/store/studentStores/browseStore";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator,Image,Pressable,ScrollView, Text, TextInput, View } from "react-native";
 import DateTimePicker, { DateType, useDefaultStyles } from 'react-native-ui-datepicker';
@@ -96,12 +96,15 @@ export default function TeacherProfile(){
             contentContainerStyle={{flexGrow:1,paddingBottom:100}}
             showsVerticalScrollIndicator={false}
         >
+            <View className="justify-start items-start ">
+                <Ionicons name="arrow-back" size={30} color={primaryColor} onPress={()=>{router.replace('/(student)/Teachers')}}/>
+            </View>
             <View className="flex flex-col gap-4 justify-center items-center mt-12">
                 {/* avatar */}
                 <View className="w-52 h-52 rounded-full overflow-hidden border-4 border-primary">
-                    {teacher?.user?.avatar ? (
+                    {teacher?.user?.avatar_url ? (
                         <Image
-                            source={{uri:teacher?.user?.avatar}}
+                            source={{uri:teacher?.user?.avatar_url}}
                             className="w-full h-full"
                             resizeMode="cover"
                         />
@@ -247,8 +250,6 @@ export default function TeacherProfile(){
                         isVisible={showTimePicker}
                         mode="time"
                         onConfirm={(time)=>{
-                            // console.log(time.toTimeString());
-                            // console.log(day_of_week[new Date(selectedDate).getDay()]);
                             setSelectedTime(time);
                             setShowTimePicker(false);
                         }}

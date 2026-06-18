@@ -135,7 +135,7 @@ export default function SessionDetailsScreen(){
                 
                 {/* User */}
                 <View className="flex flex-row items-center gap-2 p-3 rounded-2xl bg-blue-500/10 border border-blue-500/10 mt-4">
-                    {!authUser?.avatar?(
+                    {!authUser?.avatar_url?(
                         <View
                             className="w-12 h-12 rounded-full  justify-center items-center"
                         >
@@ -150,7 +150,7 @@ export default function SessionDetailsScreen(){
                             className="w-12 h-12 rounded-full  justify-center items-center"
                         >
                             <Image
-                                source={{ uri: authUser.avatar }}
+                                source={{ uri: authUser.avatar_url }}
                                 className="w-12 h-12 rounded-full"
                             />
                         </View>

@@ -6,6 +6,7 @@ export interface user{
     email:string, 
     role:string, 
     avatar:string |null
+    avatar_url?:string|null;
     subscription?:Subscription;
     status?:string;
     created_at?:string;

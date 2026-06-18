@@ -72,7 +72,7 @@ export default function CoursesScreen(){
                                     <View className="w-full h-40">
                                         <Image 
                                             className="w-full h-full object-cover "
-                                            source={{uri:course.thumbnail as string}}
+                                            source={{uri:course.thumbnail_url as string}}
                                         />
                                     </View>
 
@@ -89,14 +89,14 @@ export default function CoursesScreen(){
                                         
                                         {/* teacher avatar and name */}
                                         <View className="flex flex-row gap-2 items-center border-b border-border pb-4">
-                                            {!course.teacher?.user?.avatar ? (
+                                            {!course.teacher?.user?.avatar_url ? (
                                                 <View className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
                                                     <Text className="text-white font-bold text-md">{course.teacher?.user?.name?.charAt(0).toUpperCase()}</Text>
                                                 </View>
                                             ) : (
                                                 <View className="w-8 h-8 rounded-full overflow-hidden">
                                                     <Image
-                                                        source={{uri:course.teacher?.user?.avatar as string}}
+                                                        source={{uri:course.teacher?.user?.avatar_url as string}}
                                                         className="w-full h-full rounded-full"
                                                     />
                                                 </View>

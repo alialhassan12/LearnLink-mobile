@@ -166,9 +166,9 @@ export default function MyBookingsScreen(){
                                     <View className="flex flex-row justify-between">
                                         {/* teacher info */}
                                         <View className="flex flex-row gap-2">
-                                            {booking?.teacher?.user?.avatar?(
+                                            {booking?.teacher?.user?.avatar_url?(
                                                 <Image
-                                                    source={{ uri: booking?.teacher?.user?.avatar }}
+                                                    source={{ uri: booking?.teacher?.user?.avatar_url }}
                                                     className="w-14 h-14 rounded-full"
                                                     resizeMode="cover"
                                                 />

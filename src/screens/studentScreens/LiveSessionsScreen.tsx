@@ -232,9 +232,9 @@ export default function LiveSessionsScreen(){
                                 {/* Teacher Info Row */}
                                 <View className="flex flex-row justify-between items-start">
                                     <View className="flex flex-row gap-3 items-center">
-                                        {session?.teacher?.user?.avatar?(
+                                        {session?.teacher?.user?.avatar_url?(
                                             <Image
-                                                source={{ uri: session?.teacher?.user?.avatar }}
+                                                source={{ uri: session?.teacher?.user?.avatar_url }}
                                                 className="w-14 h-14 rounded-full"
                                                 resizeMode="cover"
                                             />

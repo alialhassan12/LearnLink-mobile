@@ -28,13 +28,13 @@ export default function LibraryScreen() {
         >
 
         <View className="flex flex-row flex-wrap items-center gap-4 p-6 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl mb-6">
-            {!authUser?.avatar ? (
+            {!authUser?.avatar_url ? (
                 <View className="w-16 h-16 rounded-full border-2 border-primary flex items-center justify-center">
                     <FontAwesome5 name="user" size={24} color={strongText} />
                 </View>
             ) : (
                 <Image
-                    source={{ uri: authUser.avatar}}
+                    source={{ uri: authUser.avatar_url}}
                     className="w-16 h-16 rounded-full border-2 border-primary"
                 />
             )}
