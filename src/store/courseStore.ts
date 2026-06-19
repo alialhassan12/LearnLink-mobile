@@ -8,6 +8,12 @@ interface CoursStoreState{
     course:Course|null;
     isGettingCourse:boolean;
     getCourse:(id:number)=>Promise<void>;
+
+    // course details with its materials
+    // for enrolled students and teachers to view and edit course with its materials
+    courseWithMaterials:Course | null;
+    getCourseWithMaterialsById:(id:number)=>Promise<boolean>;
+    isGettingCourseWithMaterialsById:boolean;
 }
 
 export const useCourseStore=create<CoursStoreState>((set)=>({
@@ -29,5 +35,24 @@ export const useCourseStore=create<CoursStoreState>((set)=>({
         }finally{
             set({isGettingCourse:false});
         }
-    }
+    },
+
+    courseWithMaterials:null,
+    isGettingCourseWithMaterialsById:false,
+    getCourseWithMaterialsById:async(id:number)=>{
+        set({isGettingCourseWithMaterialsById:true});
+        try {
+            const response=await axiosInstance.get(`/courses/course/${id}`);
+            set({courseWithMaterials:response.data.course});
+            return true;
+        } catch (error:any) {
+            Toast.show({
+                type:'error',
+                text1:error.response?.data?.message || "An error occurred"
+            });
+            return false;
+        }finally{
+            set({isGettingCourseWithMaterialsById:false});
+        }
+    },
 }));

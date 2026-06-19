@@ -190,7 +190,10 @@ export default function MyLearningsScreen(){
 
                                     <Pressable
                                         className="flex-row items-center gap-2 bg-primary p-3 rounded-full justify-center mt-2 active:opacity-90 active:scale-95 ease-out transition-all"
-                                        // onPress={()=>router.push(`/Courses/${enrollment.course?.id}`)}
+                                        onPress={() => router.push({
+                                            pathname: "/Learnings/CourseLearning",
+                                            params: { courseId: enrollment.course?.id }
+                                        })}
                                     >
                                         <Text className="text-white font-semi-bold">Continue Learning</Text>
                                         <FontAwesome5 name="arrow-right" size={12} color="white" />
