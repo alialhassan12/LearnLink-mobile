@@ -1,10 +1,17 @@
 import {create} from "zustand";
 import axiosInstance from "../../lib/axios";
 import Toast from "react-native-toast-message";
+import { Enrollment } from "@/src/@types/enrollments";
+import { PaginationData } from "@/src/@types/paginationData";
 
 interface CourseEnrollmentState{
     enrolledCoursesIds:number[];
     getEnrolledCoursesIds:()=>Promise<void>;
+
+    enrollments:Enrollment[];
+    isGettingEnrollments:boolean;
+    enrollmentsPagination:PaginationData |null;
+    getEnrollments:(page?:number)=>Promise<void>;
 
     enroll:(courseId:number)=>Promise<void>;
     isEnrolling:boolean;
@@ -23,6 +30,28 @@ export const useCourseEnrollmentStore=create<CourseEnrollmentState>((set,get)=>(
                 type:"error",
                 text1:error.response?.data?.message || "Failed to get enrolled courses ids"
             });
+        }
+    },
+
+    enrollments:[],
+    isGettingEnrollments:false,
+    enrollmentsPagination:null,
+    getEnrollments:async(page:number=1)=>{
+        try {
+            set({isGettingEnrollments:true});
+            const response=await axiosInstance.get(`/courses/enrolled-courses?page=${page}`);
+            set({
+                enrollments:response.data.enrollments.data,
+                enrollmentsPagination:response.data.pagination
+            });
+        } catch (error:any) {
+            console.log("Error getting enrollments:",error);
+            Toast.show({
+                type:"error",
+                text1:error.response?.data?.message || "Failed to get enrollments"
+            });
+        }finally{
+            set({isGettingEnrollments:false});
         }
     },
 

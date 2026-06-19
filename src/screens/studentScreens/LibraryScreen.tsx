@@ -15,7 +15,7 @@ export default function LibraryScreen() {
     const iconColor=isDark?"#93c5fd":"#3b82f6";
 
     const cards = [
-        { id: 0, label: "My Learnings", icon: "book-open", navigation:"" },
+        { id: 0, label: "My Learnings", icon: "book-open", navigation:"/Learnings" },
         { id: 1, label: "My Bookings", icon: "calendar", navigation:"/MyBookings" },
         { id: 2, label: "Live Sessions", icon: "video", navigation:"/LiveSessions" },
     ];

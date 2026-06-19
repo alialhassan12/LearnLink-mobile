@@ -68,7 +68,7 @@ export default function TeachersScreen(){
                     <Input
                         placeholder="Search by subject, name..."
                         placeholderTextColor={strongText}
-                        className="pl-12"
+                        className="pl-12 rounded-lg"
                     />
                 </View>
 
