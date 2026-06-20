@@ -1,10 +1,11 @@
+import CourseCard from "@/src/components/student/CourseCard";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import { useBrowseStore } from "@/src/store/studentStores/browseStore";
 import { useCourseEnrollmentStore } from "@/src/store/studentStores/courseEnrollmentStore";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { RelativePathString, router } from "expo-router";
 import { useEffect, useRef } from "react";
-import { View, Text, ScrollView, Pressable, Image } from "react-native";
+import { View, Text, ScrollView, Pressable, Image, FlatList } from "react-native";
 
 export default function CoursesScreen(){
     const {isDark}=useTheme();
@@ -12,7 +13,7 @@ export default function CoursesScreen(){
     const {courses,getCourses,isGettingCourses,coursesPaginationData}=useBrowseStore();
     const {enrolledCoursesIds}=useCourseEnrollmentStore();
 
-    const scrollRef=useRef<ScrollView>(null);
+    const scrollRef=useRef<FlatList>(null);
 
     useEffect(()=>{
         if(courses.length===0){
@@ -21,21 +22,26 @@ export default function CoursesScreen(){
     },[getCourses])
 
     const handleScrollToTop=()=>{
-        scrollRef.current?.scrollTo({
-            y:0,
+        scrollRef.current?.scrollToOffset({
+            offset:0,
             animated:true
         });
     }
 
+    const loadMoreCourses=async()=>{
+        if(isGettingCourses) return;
+        if(coursesPaginationData?.current_page===coursesPaginationData?.last_page) return;
+        
+        const nextPage=coursesPaginationData?.current_page!+1;
+        if(nextPage <= coursesPaginationData?.last_page!){
+            await getCourses(nextPage);
+        }
+    }
+
     return(
-        <ScrollView
-            ref={scrollRef}
-            className="w-full px-4"
-            contentContainerStyle={{flexGrow:1,paddingBottom:100}}
-            showsVerticalScrollIndicator={false}
-        >
+        <View className="w-full px-4">
             {/* top section with filters */}
-            <View className="flex flex-row justify-between items-center">
+            <View className="flex flex-row justify-between items-center mb-4">
                 <Text className="text-2xl font-bold text-text-strong">Explore Courses</Text>
                 <Pressable
                     className="p-3 bg-bg-2 rounded-lg border border-border"
@@ -44,150 +50,44 @@ export default function CoursesScreen(){
                 </Pressable>
             </View>
 
-            {/* courses list */}
-            <View className="mt-6">
-                {isGettingCourses &&(
-                    Array.from({length:4}).map((_,index)=>{
-                        return (
-                            <View key={index} className="w-full mb-4">
-                                <CourseCardSkeleton/>
-                            </View>
-                        );
-                    })
-                )}
-
-                {!isGettingCourses && courses.length===0 && (
-                    <View className="flex justify-center items-center">
-                        <Text className="text-text-strong">No courses found </Text>
-                        <Text className="text-text-weak">try to adjust the filter settings or search again.</Text>
-                    </View>
-                )}
-
-                {!isGettingCourses && courses.length>0 &&(
-                    <View className="flex flex-col gap-4"> 
-                        {courses.map((course,index)=>{
-                            return(
-                                <View key={index} className="flex flex-col gap-2 bg-bg-2 w-full rounded-lg border border-border overflow-hidden">
-                                    {/* course thumbnail */}
-                                    <View className="w-full h-40">
-                                        <Image 
-                                            className="w-full h-full object-cover "
-                                            source={{uri:course.thumbnail_url as string}}
-                                        />
-                                    </View>
-
-                                    <View className="flex flex-col gap-2 p-4">
-                                        {/* category */}
-                                        <Text className="text-text-weak font-semibold px-2 py-1 max-w-36 bg-blue-500/20 rounded-lg text-sm tracking-wider">
-                                            {course.category?.title}
-                                        </Text>
-
-                                        {/* course details */}
-                                        <Text className="text-text-strong text-lg font-semibold">
-                                            {course.title}
-                                        </Text>
-                                        
-                                        {/* teacher avatar and name */}
-                                        <View className="flex flex-row gap-2 items-center border-b border-border pb-4">
-                                            {!course.teacher?.user?.avatar_url ? (
-                                                <View className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                                                    <Text className="text-white font-bold text-md">{course.teacher?.user?.name?.charAt(0).toUpperCase()}</Text>
-                                                </View>
-                                            ) : (
-                                                <View className="w-8 h-8 rounded-full overflow-hidden">
-                                                    <Image
-                                                        source={{uri:course.teacher?.user?.avatar_url as string}}
-                                                        className="w-full h-full rounded-full"
-                                                    />
-                                                </View>
-                                            )}
-                                            <Text className="text-text-weak font-semibold text-md">{course.teacher?.user?.name}</Text>
-                                        </View>
-
-                                        {/* price and enroll */}
-                                        <View className="flex flex-row justify-between items-center mt-2">
-                                            <Text className="text-primary text-lg font-bold">${course.price}</Text>
-                                            {enrolledCoursesIds.includes(course?.id as number)?(
-                                                <Pressable
-                                                    onPress={()=>{
-                                                        
-                                                    }}
-                                                    className="bg-transparent border border-border rounded-lg px-4 py-2 active:scale-95 transition-all duration-300"
-                                                >
-                                                    <Text className="text-text-strong font-bold">Go to course</Text>
-                                                </Pressable>
-                                            ):(
-                                                <Pressable
-                                                onPress={()=>{
-                                                    router.push({
-                                                        pathname:"/(student)/(Courses)/[CourseId]",
-                                                        params:{
-                                                            CourseId:course.id?.toString() as string
-                                                        }
-                                                    });
-                                                }}
-                                                className="bg-primary rounded-lg px-4 py-2 active:scale-95 transition-all duration-300"
-                                            >
-                                                <Text className="text-white font-bold">Enroll</Text>
-                                            </Pressable>
-                                            )}
-                                        </View>
-                                    </View>
-                                </View>
-                            )
-                        })}
-
-                        {/* paginations */}
-                        <View className="flex flex-row gap-2 items-center justify-center my-4">
-                            {/* previous button */}
-                            <Pressable
-                                disabled={coursesPaginationData?.current_page===1}
-                                className="bg-bg-2 text-text-strong border border-border px-3 py-2 rounded-full active:scale-95"
-                                onPress={() => {
-                                    getCourses(coursesPaginationData!.current_page - 1);
-                                    handleScrollToTop();
-                                }}
-                            >
-                                <Text className="text-md text-text-strong font-bold flex flex-row items-center gap-2">
-                                    <FontAwesome5 name="chevron-left" size={13} color={strongText}/>
-                                </Text>
-                            </Pressable>
-
-                            {/* page numbers */}
-                            {Array.from({length:coursesPaginationData?.last_page!}).map((_,index)=>(
-                                <Pressable
-                                    key={index}
-                                    className={`bg-bg-2 text-text-strong border border-border px-3 py-2 rounded-full active:scale-95 ${coursesPaginationData?.current_page===index+1 ?"bg-primary text-white":""}`}
-                                    disabled={coursesPaginationData?.current_page===index+1}
-                                    onPress={()=>{
-                                        getCourses(index+1);
-                                        handleScrollToTop();
-                                    }}
-                                >
-                                    <Text className="text-md text-text-strong font-bold flex flex-row items-center gap-2">
-                                        {index+1}
-                                    </Text>
-                                </Pressable>
-                            ))}
-
-                            {/* next button */}
-                            <Pressable
-                                disabled={coursesPaginationData?.current_page===coursesPaginationData?.last_page}
-                                className="bg-bg-2 text-text-strong border border-border px-3 py-2 rounded-full active:scale-95"
-                                onPress={() => {
-                                    getCourses(coursesPaginationData!.current_page + 1);
-                                    handleScrollToTop();
-                                }}
-                            >
-                                <Text className="text-md text-text-strong font-bold flex flex-row items-center gap-2">
-                                    <FontAwesome5 name="chevron-right" size={13} color={strongText}/>
-                                </Text>
-                            </Pressable>
+            {/* flatlist for courses */}
+            {isGettingCourses?(
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    style={{marginBottom:140}}
+                    data={[...Array(6)]}
+                    keyExtractor={(item,idx)=>String(idx)}
+                    renderItem={()=>(
+                        <View className="w-full mb-2">
+                            <CourseCardSkeleton />
                         </View>
-                    </View>
-                )}
-            </View>
-        </ScrollView>
+                    )}
+                />
+            ):(
+                <FlatList
+                    ref={scrollRef}
+                    data={courses}
+                    style={{marginBottom:140}}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({item})=>(
+                        <View className="w-full mb-2">
+                            <CourseCard course={item}/>
+                        </View>
+                    )}
+                    refreshing={isGettingCourses}
+                    onRefresh={()=>{getCourses(1);handleScrollToTop();}}
+                    onEndReached={loadMoreCourses}
+                    onEndReachedThreshold={0.5}
+                    keyExtractor={(item)=>String(item.id)}
+                    ListEmptyComponent={
+                        <View className="flex justify-center items-center">
+                            <Text className="text-text-strong">No courses found </Text>
+                            <Text className="text-text-weak">try to adjust the filter settings or search again.</Text>
+                        </View>
+                    }
+                />
+            )}
+        </View>
     );
 }
 

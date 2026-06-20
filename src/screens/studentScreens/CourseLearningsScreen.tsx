@@ -14,7 +14,6 @@ import { useCourseStore } from "@/src/store/courseStore";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import { CourseMaterial } from "@/src/@types/courseMaterials";
 import { useVideoPlayer, VideoView } from "expo-video";
-import * as FileSystem from "expo-file-system";
 import {File,Paths} from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import Toast from "react-native-toast-message";

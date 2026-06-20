@@ -22,6 +22,8 @@ export default function StudentLayout(){
                         iconName=focused ? "book" : "book-outline";
                     }else if(route.name === "(Library)"){
                         iconName=focused ? "library" : "library-outline";
+                    }else if(route.name === "(Chat)"){
+                        iconName=focused ? "chatbubbles" : "chatbubbles-outline";
                     }
                     return <Ionicons name={iconName as any} size={20} color={focused ? primaryColor : inactiveColor} />;
                 },
@@ -50,6 +52,7 @@ export default function StudentLayout(){
                 <Tabs.Screen name="(Teachers)" options={{title:"Teachers"}} />
                 <Tabs.Screen name="(Courses)" options={{title:"Courses"}}/>
                 <Tabs.Screen name="(Library)" options={{title:"Library"}}/>
+                <Tabs.Screen name="(Chat)" options={{title:"Chat"}}/>
             </Tabs>
         </>
     );
