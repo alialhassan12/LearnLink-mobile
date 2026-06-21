@@ -6,9 +6,13 @@ import RoleSelector, { Role } from "../components/RoleSelector";
 import Input from "../components/Input";
 import { Ionicons } from "@expo/vector-icons";
 import useAuthStore from "../store/authStore";
+import { useTheme } from "../providers/ThemeProvider";
 
 export default function RegisterScreen(){
-    const {register,isRegistering,authUser}=useAuthStore();
+    const {isDark}=useTheme();
+    const weakColor=isDark ? "#94a3b8" : "#334155";
+
+    const {register,isRegistering}=useAuthStore();
     const [selectedRole, setSelectedRole] = useState<Role | null>(null);
     const [showPassword,setShowPassword] = useState(false);
     const [showConfirmPassword,setShowConfirmPassword] = useState(false);
@@ -152,11 +156,11 @@ export default function RegisterScreen(){
                                 placeholder="John Doe"
                                 value={formData.name}
                                 onChangeText={(text)=>setFormData({...formData,name:text})}
-                                placeholderTextColor={"#666"}
+                                placeholderTextColor={weakColor}
                                 disabled={isRegistering}
-                                className={hasError.name ?"border border-red-500" : ""} 
+                                className={hasError.name ?"border border-red-500" : "rounded-lg border-border border"} 
                             />
-                            <Ionicons name="person" size={20} color={"#666"} className="absolute right-3 top-1/2 -translate-y-1/2"/>
+                            <Ionicons name="person" size={20} color={weakColor} className="absolute right-3 top-1/2 -translate-y-1/2"/>
                         </View>
                         {error.name && (
                             <Text className="text-red-500 text-sm">{error.name}</Text>
@@ -169,10 +173,10 @@ export default function RegisterScreen(){
                                 onChangeText={(text)=>setFormData({...formData,email:text})}
                                 placeholder="John Doe@example.com" 
                                 disabled={isRegistering}
-                                placeholderTextColor={"#666"} 
-                                className={hasError.email ?"border border-red-500" : ""}
+                                placeholderTextColor={weakColor} 
+                                className={hasError.email ?"border border-red-500" : "rounded-lg border-border border"}
                             />
-                            <Ionicons name="mail" size={20} color={"#666"} className="absolute right-3 top-1/2 -translate-y-1/2"/>
+                            <Ionicons name="mail" size={20} color={weakColor} className="absolute right-3 top-1/2 -translate-y-1/2"/>
                         </View>
                         {error.email && (
                             <Text className="text-red-500 text-sm">{error.email}</Text>
@@ -184,13 +188,13 @@ export default function RegisterScreen(){
                                 value={formData.password}
                                 onChangeText={(text)=>setFormData({...formData,password:text})}
                                 placeholder="••••••••••••••••" 
-                                placeholderTextColor={"#666"}
+                                placeholderTextColor={weakColor}
                                 secureTextEntry={!showPassword}
                                 disabled={isRegistering}
-                                className={hasError.password ?"border border-red-500" : ""}
+                                className={hasError.password ?"border border-red-500" : "rounded-lg border-border border"}
                             />
                             <Pressable className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer" onPress={()=>setShowPassword(!showPassword)}>
-                                {showPassword ? <Ionicons name="eye-off" size={24} color={"#666"}/> : <Ionicons name="eye" size={24} color={"#666"}/>}
+                                {showPassword ? <Ionicons name="eye-off" size={24} color={weakColor}/> : <Ionicons name="eye" size={24} color={weakColor}/>}
                             </Pressable>
                         </View>
                         {error.password && (
@@ -203,13 +207,13 @@ export default function RegisterScreen(){
                                 value={formData.password_confirmation}
                                 onChangeText={(text)=>setFormData({...formData,password_confirmation:text})}
                                 placeholder="••••••••••••••••" 
-                                placeholderTextColor={"#666"}
+                                placeholderTextColor={weakColor}
                                 disabled={isRegistering}
-                                className={hasError.password_confirmation ?"border border-red-500" : ""}
+                                className={hasError.password_confirmation ?"border border-red-500" : "rounded-lg border-border border"}
                                 secureTextEntry={!showConfirmPassword}
                             />
                             <Pressable className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer" onPress={()=>setShowConfirmPassword(!showConfirmPassword)}>
-                                {showConfirmPassword ? <Ionicons name="eye-off" size={24} color={"#666"}/> : <Ionicons name="eye" size={24} color={"#666"}/>}
+                                {showConfirmPassword ? <Ionicons name="eye-off" size={24} color={weakColor}/> : <Ionicons name="eye" size={24} color={weakColor}/>}
                             </Pressable>
                         </View>
                         {error.password_confirmation && (

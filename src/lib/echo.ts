@@ -14,9 +14,9 @@ const getWsHost = () => {
 
 const echo = new Echo({
     broadcaster: 'reverb',
-    key: "eyfj9yzbvyqlpk5hfrpn",
+    key: process.env.EXPO_PUBLIC_REVERB_APP_KEY,
     wsHost: getWsHost(),
-    wsPort: 8080,
+    wsPort: Number(process.env.EXPO_PUBLIC_REVERB_PORT),
     forceTLS: false,
     enabledTransports: ['ws', 'wss'],
     authorizer: (channel: any, options: any) => {

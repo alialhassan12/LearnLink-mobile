@@ -8,10 +8,14 @@ import Input from "../components/Input";
 import Toast from "react-native-toast-message";
 import useAuthStore from "../store/authStore";
 import { useCourseEnrollmentStore } from "../store/studentStores/courseEnrollmentStore";
+import { useTheme } from "../providers/ThemeProvider";
 
 
 export default function LoginScreen(){
-    const {login,isloggingIn,authUser}=useAuthStore();
+    const {isDark}=useTheme();
+    const weakColor=isDark ? "#94a3b8" : "#334155";
+
+    const {login,isloggingIn}=useAuthStore();
     const {getEnrolledCoursesIds}=useCourseEnrollmentStore();
     const [showPassword,setShowPassword]=useState<boolean>(false);
     const [formData,setFormData]=useState<{
@@ -83,12 +87,12 @@ export default function LoginScreen(){
                         <Text className="font-semibold text-text-weak text-sm">Email Address</Text>
                         <Input 
                             placeholder="JohnDoe@example.com" 
-                            placeholderTextColor={"#666"} 
+                            placeholderTextColor={weakColor} 
                             keyboardType="email-address"
                             value={formData.email}
                             disabled={isloggingIn}
                             onChangeText={(text)=>setFormData({...formData,email:text})}
-                            className={error.email ? "border border-red-500" : ""}
+                            className={error.email ? "border border-red-500" : "rounded-lg border-border border"}
                         />
                         {error.email && (
                             <Text className="text-red-500 text-sm">{error.email}</Text>
@@ -97,15 +101,15 @@ export default function LoginScreen(){
                         <View className="relative w-full">
                             <Input 
                                 placeholder="••••••••••••••••" 
-                                placeholderTextColor={"#666"} 
+                                placeholderTextColor={weakColor} 
                                 secureTextEntry={!showPassword}
                                 value={formData.password}
                                 disabled={isloggingIn}
                                 onChangeText={(text)=>setFormData({...formData,password:text})}
-                                className={error.password ? "border border-red-500" : ""}
+                                className={error.password ? "border border-red-500" : "rounded-lg border-border border"}
                             />
                             <Pressable className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer" onPress={()=>setShowPassword(!showPassword)}>
-                                {showPassword ? <Ionicons name="eye-off" size={24} color={"#666"}/> : <Ionicons name="eye" size={24} color={"#666"}/>}
+                                {showPassword ? <Ionicons name="eye-off" size={24} color={weakColor}/> : <Ionicons name="eye" size={24} color={weakColor}/>}
                             </Pressable>
                         </View>
                         {error.password && (

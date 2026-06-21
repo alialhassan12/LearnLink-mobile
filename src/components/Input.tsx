@@ -8,7 +8,9 @@ export default function Input({
     keyboardType,
     value,
     onChangeText,
-    disabled
+    disabled,
+    multiline,
+    numberOfLines
 }:{
     className?:string;
     placeholder?:string;
@@ -18,6 +20,8 @@ export default function Input({
     value?:any;
     onChangeText?:(text:any)=>void;
     disabled?:boolean;
+    multiline?:boolean;
+    numberOfLines?:number;
 }){
     return(
         <TextInput
@@ -29,7 +33,8 @@ export default function Input({
             placeholder={placeholder}
             secureTextEntry={secureTextEntry}
             keyboardType={keyboardType as any}
-        >
-        </TextInput>
+            multiline={multiline}
+            numberOfLines={numberOfLines}
+        />
     );
 }

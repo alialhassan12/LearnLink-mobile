@@ -23,7 +23,7 @@ export default function RoleSelector({ selectedRole, onSelectRole }: RoleSelecto
         className={`flex-1 p-5 rounded-[28px] border border-border bg-bg-1 transition-all duration-200 ${
           selectedRole === "student"
             ? "border-primary shadow-md shadow-indigo-600/30 scale-[1.02]"
-            : "border-slate-100/80 shadow-sm shadow-black/5"
+            : "border-border shadow-sm shadow-black/5"
         }`}
         style={{
           shadowColor: selectedRole === "student" ? "#4f46e5" : "#000",
@@ -53,7 +53,7 @@ export default function RoleSelector({ selectedRole, onSelectRole }: RoleSelecto
         className={`flex-1 p-5 rounded-[28px] border border-border bg-bg-1 transition-all duration-200 ${
           selectedRole === "teacher"
             ? "border-primary shadow-md shadow-sky-500/30 scale-[1.02]"
-            : "border-slate-100/80 shadow-sm shadow-black/5"
+            : "border-border shadow-sm shadow-black/5"
         }`}
         style={{
           shadowColor: selectedRole === "teacher" ? "#0284c7" : "#000",

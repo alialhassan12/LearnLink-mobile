@@ -1,11 +1,11 @@
 import type { Subscription } from "./subscription";
 
 export interface user{ 
-    id:number, 
+    id?:number, 
     name:string, 
     email:string, 
     role:string, 
-    avatar:string |null
+    avatar?:string |null
     avatar_url?:string|null;
     subscription?:Subscription;
     status?:string;

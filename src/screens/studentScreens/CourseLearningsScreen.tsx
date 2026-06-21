@@ -293,17 +293,17 @@ export default function CourseLearningsScreen() {
             style={{ backgroundColor: cardBg }}
         >
             <Pressable
-            onPress={() => router.back()}
-            className="p-1 rounded-full active:bg-bg-1 mr-3"
+                onPress={() => router.back()}
+                className="p-1 rounded-full active:bg-bg-1 mr-3"
             >
-            <Ionicons name="arrow-back" size={24} color={strongText} />
+                <Ionicons name="arrow-back" size={24} color={strongText} />
             </Pressable>
             <View className="flex-1">
-            <Text className="text-text-strong font-bold text-lg" numberOfLines={1}>
-                {courseWithMaterials?.title || "Course Material"}
-            </Text>
-            <Text className="text-text-weak text-[11px]" numberOfLines={1}>
-                {selectedMaterial?.title || "Syllabus Overview"}
+                <Text className="text-text-strong font-bold text-lg" numberOfLines={1}>
+                    {courseWithMaterials?.title || "Course Material"}
+                </Text>
+                <Text className="text-text-weak text-[11px]" numberOfLines={1}>
+                    {selectedMaterial?.title || "Syllabus Overview"}
             </Text>
             </View>
         </View>

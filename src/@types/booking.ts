@@ -1,3 +1,4 @@
+import { LiveSession } from "./liveSession";
 import { Student } from "./student";
 import { Teacher } from "./teahcer";
 
@@ -17,4 +18,5 @@ export interface Booking{
 
     teacher?:Teacher;
     student?:Student;
+    live_session?:LiveSession;
 }
