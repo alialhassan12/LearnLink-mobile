@@ -9,6 +9,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DropDownPicker from "react-native-dropdown-picker";
 import Toast from "react-native-toast-message";
 import useBookingStore from "@/src/store/booking";
+import MessageButton from "@/src/components/MessageButton";
 
 export default function TeacherProfile(){
     const {isDark}=useTheme();
@@ -155,10 +156,8 @@ export default function TeacherProfile(){
                         <Text className="text-text-weak text-lg font-light">/hour</Text>
                     </View>
 
-                    <Pressable className="flex flex-row justify-center items-center rounded-2xl mt-4 bg-bg-1  py-3 w-full border border-primary active:bg-primary active:border-none active:scale-95 transition-all duration-300 group">
-                        <Ionicons name="chatbubble" size={16} color={primaryColor} />
-                        <Text className="text-primary text-lg font-light ml-2 group-active:text-white group-active:font-bold">Message Teacher</Text>
-                    </Pressable>
+                    <MessageButton recieverUser={teacher?.user!} />
+
                 </View>
 
                 {/* about */}

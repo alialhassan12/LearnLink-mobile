@@ -7,6 +7,7 @@ import {
     ActivityIndicator,
     Animated,
     StyleSheet,
+    Image
 } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,7 +18,6 @@ import { useVideoPlayer, VideoView } from "expo-video";
 import {File,Paths} from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import Toast from "react-native-toast-message";
-import { Image } from "expo-image";
 import Skeleton from "@/src/components/Skeleton";
 
 // Custom component to handle inline video playback for a specific source
@@ -208,10 +208,9 @@ export default function CourseLearningsScreen() {
             return (
                 <View className="flex-1 bg-slate-900 rounded-2xl overflow-hidden border border-border">
                     <Image
+                        className="object-contain"
                         source={{ uri: path }}
                         style={styles.imageViewer}
-                        contentFit="contain"
-                        transition={300}
                     />
                 </View>
             );
@@ -293,7 +292,7 @@ export default function CourseLearningsScreen() {
             style={{ backgroundColor: cardBg }}
         >
             <Pressable
-                onPress={() => router.back()}
+                onPress={() => router.replace({pathname:"/(student)/(Library)"})}
                 className="p-1 rounded-full active:bg-bg-1 mr-3"
             >
                 <Ionicons name="arrow-back" size={24} color={strongText} />
@@ -577,7 +576,7 @@ export default function CourseLearningsScreen() {
             >
                 {courseWithMaterials?.teacher?.user?.avatar_url ? (
                 <Image
-                    source={{ uri: courseWithMaterials.teacher.user.avatar_url }}
+                    source={{ uri: courseWithMaterials?.teacher?.user?.avatar_url || '' }}
                     style={styles.avatar}
                     className="border-2 border-border mb-3"
                 />

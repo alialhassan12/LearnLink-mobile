@@ -8,6 +8,7 @@ import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from "rea
 import {File,Paths} from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { router } from "expo-router";
+import MessageButton from "@/src/components/MessageButton";
 
 export default function SessionDetailsScreen(){
     const {authUser}=useAuthStore();
@@ -113,10 +114,7 @@ export default function SessionDetailsScreen(){
                             </>
                         )}
                     </Pressable>
-                    <Pressable className="flex flex-row justify-center items-center rounded-2xl bg-bg-1  py-3 w-full border border-primary active:bg-primary active:border-none active:scale-95 transition-all duration-300 group">
-                        <Ionicons name="chatbubble" size={16} color={primaryColor} />
-                        <Text className="text-primary text-lg font-light ml-2 group-active:text-white group-active:font-bold">Message Teacher</Text>
-                    </Pressable>
+                    <MessageButton recieverUser={studentSelectedSession!.teacher?.user!}/>
                 </View>
             </View>
 

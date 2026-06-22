@@ -345,7 +345,7 @@ export default function ProfileScreen() {
                     <View className="flex flex-col gap-2 pb-4 border-b border-border">
                         <Text className="text-sm font-bold text-text-strong">Update Password</Text>
                         <Text className="text-text-weak text-xs">Regularly change your password to keep your account secure.</Text>
-                        <Pressable className="w-full mt-2 h-11 bg-transparent border border-primary/50 rounded-xl justify-center items-center active:scale-95 transition-all duration-200">
+                        <Pressable className="w-full mt-2 h-11 bg-transparent border border-primary rounded-xl justify-center items-center active:scale-95 transition-all duration-200">
                             <Text className="text-primary font-bold text-sm">Change Password</Text>
                         </Pressable>
                     </View>

@@ -196,7 +196,7 @@ export default function ChatScreen() {
     const handleDocumentDownload = async (
             fileTitle: string,
             fileUrl:string
-        ) => {
+    ) => {
             setIsDownloading(true);
             try {
                 const filename=new Date().toISOString() + "-" + fileTitle;
@@ -301,7 +301,7 @@ export default function ChatScreen() {
                 <Text className="text-text-strong text-lg font-bold" style={{ color: strongText }}>
                     No active chat selected
                 </Text>
-                <Pressable onPress={() => router.back()} className="mt-4 bg-primary px-4 py-2 rounded-lg">
+                <Pressable onPress={() => router.replace({pathname:"/(student)/(Chat)"})} className="mt-4 bg-primary px-4 py-2 rounded-lg">
                     <Text className="text-white font-semibold">Go Back</Text>
                 </Pressable>
             </SafeAreaView>

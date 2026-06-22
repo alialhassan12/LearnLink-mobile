@@ -6,6 +6,7 @@ import { Image, Pressable, Text, View } from "react-native";
 import { useState } from "react";
 import { useBrowseStore } from "@/src/store/studentStores/browseStore";
 import BookingCard from "./BookingCard";
+import ProTeacherBadge from "./ProTeacherBadge";
 
 
 export default function TeachersCard({teacher}:{teacher:Teacher}){
@@ -34,10 +35,10 @@ export default function TeachersCard({teacher}:{teacher:Teacher}){
             className="flex flex-col gap-4 p-4 bg-bg-2 w-full rounded-lg border border-border"
         >
             {/* avatar */}
-            <View className="w-full h-40 bg-bg-1 rounded-lg">
-                {teacher.avatar ? (
+            <View className="w-full h-40 bg-bg-1 rounded-lg relative">
+                {teacher?.user?.avatar_url ? (
                     <Image
-                        source={{uri:teacher.avatar}}
+                        source={{uri:teacher?.user?.avatar_url}}
                         className="w-full h-full object-cover rounded-lg"
                     />
                 ) : (
@@ -45,15 +46,18 @@ export default function TeachersCard({teacher}:{teacher:Teacher}){
                         <FontAwesome5 name="user" size={40} color={strongText}/>
                     </View>
                 )}
+                {teacher?.user?.subscription?.plan?.features?.search_priority && teacher?.user?.subscription?.status === 'active' && (
+                    <ProTeacherBadge />
+                )}
             </View>
             <View className="w-full">
-                <Text className="text-text-strong text-2xl font-bold">{teacher.name}</Text>
+                <Text className="text-text-strong text-2xl font-bold">{teacher?.user?.name}</Text>
                 <View className="flex flex-row justify-between w-full ">
                     <Text className="text-primary text-wrap line-clamp-1 w-3/4">
-                        {teacher.headline?teacher.headline:"No headline available."}
+                        {teacher?.headline?teacher?.headline:"No headline available."}
                     </Text>
                     <Text className="text-text-strong">
-                        ${teacher.hourly_rate}/hr
+                        ${teacher?.hourly_rate}/hr
                     </Text>
                 </View>
                 {/* subjects tags */}
@@ -71,7 +75,7 @@ export default function TeachersCard({teacher}:{teacher:Teacher}){
                 {/* bio */}
                 <View className="border-b border-border pb-4">
                     <Text className="text-text-weak text-md font-semibold line-clamp-4">
-                        {teacher.bio?teacher.bio:"No bio available."}
+                        {teacher?.bio?teacher?.bio:"No bio available."}
                     </Text>
                 </View>
 

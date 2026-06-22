@@ -9,6 +9,7 @@ import Toast from "react-native-toast-message";
 import useAuthStore from "../store/authStore";
 import { useCourseEnrollmentStore } from "../store/studentStores/courseEnrollmentStore";
 import { useTheme } from "../providers/ThemeProvider";
+import { useChatStore } from "../store/chatStore";
 
 
 export default function LoginScreen(){
@@ -17,6 +18,7 @@ export default function LoginScreen(){
 
     const {login,isloggingIn}=useAuthStore();
     const {getEnrolledCoursesIds}=useCourseEnrollmentStore();
+    const {getConversations}=useChatStore();
     const [showPassword,setShowPassword]=useState<boolean>(false);
     const [formData,setFormData]=useState<{
         email:string,
@@ -53,10 +55,12 @@ export default function LoginScreen(){
         const success=await login(formData);
         if(success){
             const user = useAuthStore.getState().authUser;
+            getConversations();
             if(user?.role === 'student'){
                 getEnrolledCoursesIds();
                 router.replace('/(student)/Home');
             }
+
         }
     }
 

@@ -7,6 +7,7 @@ import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import type { Conversation } from "../@types/conversation";
+import echo from "../lib/echo";
 
 export default function ConversationsScreen() {
     const { isDark } = useTheme();
@@ -18,6 +19,8 @@ export default function ConversationsScreen() {
         conversations,
         isGettingConversations,
         getConversations,
+        getConversationsWithNoLoading,
+        addConversation,
         setActiveConversation,
         getMessages
     } = useChatStore();
@@ -27,6 +30,40 @@ export default function ConversationsScreen() {
     useEffect(() => {
         getConversations();
     }, []);
+
+    useEffect(()=>{
+        if (!authUser?.id) return;
+
+        const channel = echo.private(`user.${authUser.id}`)
+            .listen('.conversation.updated', (event: any) => {
+                useChatStore.setState((state) => {
+                    const existing = state.conversations.find(
+                        (c: Conversation) => c.id === event.conversation_id
+                    );
+
+                    if (existing) {
+                        // Update the existing conversation's last_message and timestamp
+                        const updated = state.conversations.map((c: Conversation) =>
+                            c.id === event.conversation_id
+                                ? { ...c, last_message: event.last_message, updated_at: event.updated_at }
+                                : c
+                        );
+                        updated.sort((a, b) =>
+                            new Date(b.updated_at ?? 0).getTime() - new Date(a.updated_at ?? 0).getTime()
+                        );
+                        return { conversations: updated };
+                    } else {
+                        // New conversation — fetch fresh list from API
+                        getConversationsWithNoLoading();
+                        return state;
+                    }
+                });
+            });
+
+        return () => {
+            echo.leave(`user.${authUser.id}`);
+        };
+    }, [authUser?.id]);
 
     // Filter conversations based on participants' names matching the search query
     const filteredConversations = conversations.filter((conversation) => {

@@ -1,3 +1,4 @@
+import MessageButton from "@/src/components/MessageButton";
 import Skeleton from "@/src/components/Skeleton";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import useBookingStore from "@/src/store/booking";
@@ -207,10 +208,7 @@ export default function MyBookingsScreen(){
                                             </Text>
                                         </View>
                                     </View>
-                                    <Pressable className="flex flex-row justify-center items-center rounded-2xl mt-4 bg-bg-1  py-3 w-full border border-primary active:bg-primary active:border-none active:scale-95 transition-all duration-300 group">
-                                        <Ionicons name="chatbubble" size={16} color={primaryColor} />
-                                        <Text className="text-primary text-lg font-light ml-2 group-active:text-white group-active:font-bold">Message Teacher</Text>
-                                    </Pressable>
+                                    <MessageButton recieverUser={booking.teacher?.user!}/>
                                 </View>
                             );
                         })}

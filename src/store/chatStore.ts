@@ -20,6 +20,7 @@ interface ChatState {
 
     isGettingConversations: boolean;
     getConversations: () => Promise<void>;
+    getConversationsWithNoLoading:()=>Promise<void>;
 
     isGettingMessages: boolean;
     getMessages: (conversation_id: number) => Promise<void>;
@@ -44,11 +45,18 @@ export const useChatStore = create<ChatState>((set) => ({
         try {
             const response = await axiosInstance.get('/messages/conversations');
             set({ conversations: response.data.conversations });
-            console.log('conversations loaded on mobile:', response.data.conversations?.length);
         } catch (error: any) {
             console.log('error getting conversations on mobile:', error?.response?.data || error.message);
         } finally {
             set({ isGettingConversations: false });
+        }
+    },
+    getConversationsWithNoLoading:async()=>{
+        try {
+            const response = await axiosInstance.get('/messages/conversations');
+            set({ conversations: response.data.conversations });
+        } catch (error: any) {
+            console.log('error getting conversations on mobile:', error?.response?.data || error.message);
         }
     },
 
