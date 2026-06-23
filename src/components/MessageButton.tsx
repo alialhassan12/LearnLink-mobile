@@ -74,7 +74,7 @@ export default function MessageButton({recieverUser}:MessageButtonInterface){
                 disabled={!authUser}
             >
                 <Ionicons name="chatbubble" size={16} color={primaryColor} />
-                <Text className="text-primary text-lg font-light ml-2 group-active:text-white group-active:font-bold">Message Teacher</Text>
+                <Text className="text-primary text-lg font-light ml-2 group-active:text-white group-active:font-bold">Send Message</Text>
             </Pressable>
     )
 }

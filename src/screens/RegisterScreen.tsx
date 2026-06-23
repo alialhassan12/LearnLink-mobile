@@ -112,6 +112,9 @@ export default function RegisterScreen(){
             if(user?.role==='student') {
                 router.replace('/(student)/Home');
             }
+            if(user?.role === 'teacher'){
+                router.replace('/(teacher)/Home');
+            }
         }
     }
 

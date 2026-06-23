@@ -60,6 +60,9 @@ export default function LoginScreen(){
                 getEnrolledCoursesIds();
                 router.replace('/(student)/Home');
             }
+            if(user?.role === 'teacher'){
+                router.replace('/(teacher)/Home');
+            }
 
         }
     }

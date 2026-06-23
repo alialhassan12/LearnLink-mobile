@@ -19,6 +19,7 @@ export default function Index() {
     if(isLoggedIn && useAuthStore.getState().authUser?.role === 'student'){
       await getEnrolledCoursesIds();
     }
+
   }
 
   useEffect(()=>{
@@ -41,11 +42,14 @@ export default function Index() {
     );
   }
 
-  // if(authUser?.role==='teacher') return 
-  //   <>
-  //     <Redirect href="/(teacher)/Home" />
-  //   </>
-  
+  if(authUser?.role==='teacher') {
+    return (
+      <>
+        <Redirect href="/(teacher)/Home" />
+      </>
+    );
+  }
+
   return (
     <>
       <Redirect href="/Login" />
