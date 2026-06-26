@@ -4,24 +4,53 @@ import { useLiveSessionStore } from "@/src/store/liveSessionsStore";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useSearchParams } from "expo-router/build/hooks";
 import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from "react-native";
+import {
+    ActivityIndicator,
+    Image,
+    Pressable,
+    ScrollView,
+    Text,
+    TextInput,
+    View,
+    StyleSheet,
+} from "react-native";
 import {File,Paths} from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { router } from "expo-router";
 import MessageButton from "@/src/components/MessageButton";
+import Toast from "react-native-toast-message";
+import reviewStyles from "@/src/components/ReviewStyleSheet";
 
 export default function SessionDetailsScreen(){
     const {authUser}=useAuthStore();
     const {isDark}=useTheme();
     const primaryColor = isDark ? "#3b82f6" : "#2563eb";
     const strongText = isDark ? "#f8fafc" : "#0f172a";
+    const weakText = isDark ? "#94a3b8" : "#64748b";
+    const cardBg = isDark ? "#1e293b" : "#ffffff";
+    const borderColor = isDark ? "#334155" : "#e2e8f0";
+    const mutedBg = isDark ? "#0f172a" : "#f8fafc";
+
     const searchParams=useSearchParams();
     const sessionId=searchParams.get("sessionId");
-    const {studentSelectedSession,getStudentSelectedSession,isGettingStudentSelectedSession,getToken,isGettingToken}=useLiveSessionStore();
+    const {
+        studentSelectedSession,
+        getStudentSelectedSession,
+        isGettingStudentSelectedSession,
+        getToken,
+        isGettingToken,
+        sessionReview,
+        createSessionReview,
+        isCreatingSessionReview,
+    }=useLiveSessionStore();
     
     const scrollRef=useRef<ScrollView>(null);
     const [downloading, setDownloading] = useState<boolean>(false);
     const [selectedFile,setSelectedFile]=useState<number|null>(null);
+
+    // Review state
+    const [rating, setRating] = useState<number>(0);
+    const [reviewText, setReviewText] = useState<string>("");
     
     useEffect(()=>{
         if(sessionId){
@@ -40,6 +69,16 @@ export default function SessionDetailsScreen(){
             }
         }
     }
+
+    const handleSubmitReview = async () => {
+        if (rating === 0) {
+            Toast.show({ type: "error", text1: "Please select a rating." });
+            return;
+        }
+        if (sessionId) {
+            await createSessionReview(Number(sessionId), rating, reviewText);
+        }
+    };
 
     const downloadFile=async(fileUrl:string,fileName:string)=>{
         try{
@@ -64,6 +103,18 @@ export default function SessionDetailsScreen(){
         return <SessionDetailsSkeleton/>;
     }
 
+    if(!studentSelectedSession){
+        return (
+            <View className="flex-1 bg-bg-1 items-center justify-center px-8 gap-4">
+                <Ionicons name="calendar-outline" size={48} color={weakText}/>
+                <Text className="text-text-strong text-xl font-bold text-center">Session not found</Text>
+                <Text className="text-text-weak text-sm text-center">
+                    We couldn't load the session details. Please go back and try again.
+                </Text>
+            </View>
+        );
+    }
+
     return(
         <ScrollView 
             ref={scrollRef}
@@ -71,6 +122,7 @@ export default function SessionDetailsScreen(){
             contentContainerStyle={{paddingBottom:100,gap:16}}
             showsVerticalScrollIndicator={false}
         >
+            {/* Hero join card */}
             <View
                 className="flex-col justify-center items-center gap-4 rounded-[32px] p-6 overflow-hidden bg-[#1E1B7A]"
             >
@@ -86,7 +138,7 @@ export default function SessionDetailsScreen(){
                 <View className="flex-1 flex-col gap-1">
                     <Text className="text-3xl font-bold text-white text-center">Join the Classroom</Text>
                     <Text className="text-text-weak text-lg text-center font-semibold">
-                        {studentSelectedSession?.scheduled_day.substring(0,3).toUpperCase()}, {studentSelectedSession?.scheduled_date}
+                        {studentSelectedSession?.scheduled_day?.substring(0,3).toUpperCase()}, {studentSelectedSession?.scheduled_date}
                     </Text>
                     <Text className="text-text-weak text-lg text-center font-semibold">
                         {studentSelectedSession?.scheduled_time}
@@ -160,7 +212,7 @@ export default function SessionDetailsScreen(){
                 </View>
                 {/* Teacher */}
                 <View className="flex-row items-center gap-4 p-3 rounded-2xl border border-border mt-4">
-                    {!studentSelectedSession?.teacher?.user?.avatar?(
+                    {!studentSelectedSession?.teacher?.user?.avatar_url?(
                         <View
                             className="w-12 h-12 rounded-full justify-center items-center"
                         >
@@ -175,7 +227,7 @@ export default function SessionDetailsScreen(){
                             className="w-12 h-12 rounded-full justify-center items-center"
                         >
                             <Image
-                                source={{ uri: studentSelectedSession?.teacher?.user?.avatar }}
+                                source={{ uri: studentSelectedSession?.teacher?.user?.avatar_url }}
                                 className="w-12 h-12 rounded-full"
                             />
                         </View>
@@ -185,6 +237,125 @@ export default function SessionDetailsScreen(){
                         <Text className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-muted text-text-weak">TEACHER</Text>
                     </View>
                 </View>
+            </View>
+
+            {/* Session Review section */}
+            <View style={[reviewStyles.card, { backgroundColor: cardBg, borderColor }]}>
+                <Text style={[reviewStyles.sectionTitle, { color: strongText }]}>Session Review</Text>
+                <Text style={[ { color: weakText }]}>
+                    {sessionReview
+                        ? "Thank you for reviewing this live session. Your feedback helps us improve."
+                        : "How was your experience? Rate this session and share your feedback with the teacher."}
+                </Text>
+
+                {/* Divider */}
+                <View style={[reviewStyles.divider, { backgroundColor: borderColor }]} />
+
+                {sessionReview ? (
+                    /* Already submitted — read-only view */
+                    <View style={{gap:12}}>
+                        {/* Stars row */}
+                        <View style={reviewStyles.starsRow}>
+                            {[1,2,3,4,5].map((star) => (
+                                <Ionicons
+                                    key={star}
+                                    name={star <= sessionReview.rating ? "star" : "star-outline"}
+                                    size={24}
+                                    color={star <= sessionReview.rating ? "#f59e0b" : borderColor}
+                                />
+                            ))}
+                            <Text style={[reviewStyles.ratingLabel, { color: strongText }]}>
+                                {sessionReview.rating} / 5
+                            </Text>
+                        </View>
+
+                        {/* Review text */}
+                        {sessionReview.review ? (
+                            <View style={[reviewStyles.reviewTextBox, { backgroundColor: mutedBg, borderColor }]}>
+                                <Text style={[reviewStyles.reviewItalic, { color: strongText }]}>
+                                    "{sessionReview.review}"
+                                </Text>
+                            </View>
+                        ) : (
+                            <Text style={[reviewStyles.noCommentText, { color: weakText }]}>
+                                No written comment provided.
+                            </Text>
+                        )}
+
+                        {/* Submitted badge */}
+                        <View style={{width:100}}>
+                            <View style={reviewStyles.submittedBadge}>
+                                <Ionicons name="checkmark-circle" size={14} color="#059669" />
+                                <Text style={reviewStyles.submittedBadgeText}>Submitted</Text>
+                            </View>
+                        </View>
+                    </View>
+                ) : (
+                    /* Form to submit review */
+                    <View >
+                        {/* Rating label */}
+                        <Text style={[reviewStyles.inputLabel, { color: strongText }]}>Rating</Text>
+
+                        {/* Star Picker */}
+                        <View style={reviewStyles.starsRow}>
+                            {[1,2,3,4,5].map((star) => (
+                                <Pressable
+                                    key={star}
+                                    onPress={() => setRating(star)}
+                                    style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1, transform: [{ scale: pressed ? 0.9 : 1 }] })}
+                                >
+                                    <Ionicons
+                                        name={star <= rating ? "star" : "star-outline"}
+                                        size={36}
+                                        color={star <= rating ? "#f59e0b" : borderColor}
+                                    />
+                                </Pressable>
+                            ))}
+                        </View>
+
+                        {/* Rating text hint */}
+                        {rating > 0 && (
+                            <Text style={[reviewStyles.ratingHint, { color: primaryColor }]}>
+                                {["","Poor","Fair","Good","Very Good","Excellent"][rating]}
+                            </Text>
+                        )}
+
+                        {/* Review text input */}
+                        <Text style={[reviewStyles.inputLabel, { color: strongText, marginTop: 16 }]}>
+                            Review Description <Text style={{ color: weakText, fontWeight: "400" }}>(Optional)</Text>
+                        </Text>
+                        <TextInput
+                            value={reviewText}
+                            onChangeText={setReviewText}
+                            placeholder="Share your experience with the teacher..."
+                            placeholderTextColor={weakText}
+                            multiline
+                            numberOfLines={4}
+                            textAlignVertical="top"
+                            style={[
+                                reviewStyles.textInput,
+                                {
+                                    backgroundColor: mutedBg,
+                                    borderColor: borderColor,
+                                    color: strongText,
+                                }
+                            ]}
+                        />
+
+                        {/* Submit button */}
+                        <Pressable
+                            onPress={handleSubmitReview}
+                            disabled={rating === 0 || isCreatingSessionReview}
+                            className="bg-primary w-full h-12 items-center justify-center rounded-xl active:scale-95 transition-all duration-200 ease-in-out"
+                        >
+                            {isCreatingSessionReview ? (
+                                <ActivityIndicator size="small" color="#ffffff" />
+                            ) : (
+                                <Text className="text-text-strong text-lg font-semibold">Submit Review</Text>
+                            )}
+                        </Pressable>
+                    </View>
+                )}
             </View>
 
             {/* session materials */}

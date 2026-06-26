@@ -52,6 +52,12 @@ export default function TeachersCard({teacher}:{teacher:Teacher}){
             </View>
             <View className="w-full">
                 <Text className="text-text-strong text-2xl font-bold">{teacher?.user?.name}</Text>
+                {/* rating */}
+                <View className="flex flex-row items-center gap-1 mb-2">
+                    <FontAwesome5 name="star" size={12} color="#eab308"/>
+                    <Text className="text-yellow-500 text-sm font-semibold ">{Number(teacher?.avg_rating).toFixed(1)}</Text>
+                    <Text className="text-sm text-text-weak">({teacher?.review_count} reviews)</Text>
+                </View>
                 <View className="flex flex-row justify-between w-full ">
                     <Text className="text-primary text-wrap line-clamp-1 w-3/4">
                         {teacher?.headline?teacher?.headline:"No headline available."}

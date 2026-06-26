@@ -53,6 +53,15 @@ export default function CourseDetailsScreen(){
                 <View className="w-full px-2 flex flex-col gap-2">
                     <Text className="text-3xl font-bold text-text-strong">{course?.title}</Text>
                     <Text className="text-3xl text-primary">$ {course?.price}</Text>
+                    <View className="flex flex-row items-center gap-1">
+                        <FontAwesome5 name="star" size={12} color="#eab308"/>
+                        <Text className="text-yellow-500 text-sm font-semibold ">
+                            {Number(course?.course_reviews_avg_rating).toFixed(1)}
+                        </Text>
+                        <Text className="text-sm text-text-weak">
+                            ({course?.course_reviews_count} reviews)
+                        </Text>
+                    </View>
                 </View>
 
                 <View className="flex-col gap-2 mt-4 w-full">

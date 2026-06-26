@@ -7,7 +7,8 @@ import {
     ActivityIndicator,
     Animated,
     StyleSheet,
-    Image
+    Image,
+    TextInput,
 } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -19,6 +20,9 @@ import {File,Paths} from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import Toast from "react-native-toast-message";
 import Skeleton from "@/src/components/Skeleton";
+import useAuthStore from "@/src/store/authStore";
+import { useStudentStore } from "@/src/store/studentStores/studentStore";
+import reviewStyles from "@/src/components/ReviewStyleSheet";
 
 // Custom component to handle inline video playback for a specific source
 const CustomVideoPlayer = ({ sourceUrl }: { sourceUrl: string }) => {
@@ -40,6 +44,7 @@ const CustomVideoPlayer = ({ sourceUrl }: { sourceUrl: string }) => {
 export default function CourseLearningsScreen() {
     const { courseId } = useLocalSearchParams();
     const { isDark } = useTheme();
+    const { authUser } = useAuthStore();
 
   // Colors based on theme
     const strongText = isDark ? "#f8fafc" : "#0f172a";
@@ -48,23 +53,34 @@ export default function CourseLearningsScreen() {
     const borderColor = isDark ? "#334155" : "#e2e8f0";
     const cardBg = isDark ? "#1e293b" : "#ffffff";
     const accentColor = isDark ? "#1e3a8a" : "#eff6ff";
+    const mutedBg = isDark ? "#0f172a" : "#f8fafc";
 
   // Store state
     const {
         courseWithMaterials,
         isGettingCourseWithMaterialsById,
         getCourseWithMaterialsById,
+        courseReviews,
+        isCreatingCourseReview,
+        createCourseReview,
     } = useCourseStore();
+
+    const {getLoggedInStudentId,loggedInStudentId}=useStudentStore();
 
   // Local state
     const [selectedMaterial, setSelectedMaterial] = useState<CourseMaterial | null>(null);
     const [expandedSections, setExpandedSections] = useState<Record<number, boolean>>({});
-    const [activeTab, setActiveTab] = useState<"syllabus" | "overview" | "instructor">("syllabus");
+    const [activeTab, setActiveTab] = useState<"syllabus" | "overview" | "instructor" | "reviews">("syllabus");
     const [isDownloading, setIsDownloading] = useState(false);
+
+    // Review state
+    const [rating, setRating] = useState<number>(0);
+    const [reviewText, setReviewText] = useState<string>("");
 
   // Fetch course content on mount
     useEffect(() => {
         if (courseId) {
+            getLoggedInStudentId();
             getCourseWithMaterialsById(Number(courseId));
         }
     }, [courseId]);
@@ -371,14 +387,15 @@ export default function CourseLearningsScreen() {
 
             {/* Tab Headers (Segmented Controls) */}
             <View
-            className="flex-row border border-border rounded-xl p-1.5 mb-4 justify-between"
-            style={{ backgroundColor: cardBg }}
+                style={{ backgroundColor: cardBg, borderColor }}
+                className="flex-row border border-border rounded-xl p-1.5 mb-4"
             >
             {(
                 [
                 { key: "syllabus", label: "Syllabus", icon: "book" },
                 { key: "overview", label: "Overview", icon: "information-circle" },
                 { key: "instructor", label: "Instructor", icon: "person" },
+                { key: "reviews", label: "Reviews", icon: "star" },
                 ] as const
             ).map((tab) => {
                 const isActive = activeTab === tab.key;
@@ -386,24 +403,30 @@ export default function CourseLearningsScreen() {
                 <Pressable
                     key={tab.key}
                     onPress={() => setActiveTab(tab.key)}
-                    className="flex-1 flex-row items-center justify-center py-2.5 rounded-lg transition-colors"
                     style={{
-                    backgroundColor: isActive ? primaryColor : "transparent",
+                        flex: 1,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        paddingVertical: 8,
+                        borderRadius: 8,
+                        backgroundColor: isActive ? primaryColor : "transparent",
                     }}
                 >
                     <Ionicons
-                    name={tab.icon as any}
-                    size={15}
-                    color={isActive ? "#ffffff" : weakText}
-                    style={{ marginRight: 6 }}
+                        name={tab.icon as any}
+                        size={13}
+                        color={isActive ? "#ffffff" : weakText}
+                        style={{ marginRight: 4 }}
                     />
                     <Text
-                    className={`text-xs font-bold ${
-                        isActive ? "text-white" : "text-text-weak"
-                    }`}
-                    style={{ color: isActive ? "#ffffff" : weakText }}
+                        style={{
+                            fontSize: 10,
+                            fontWeight: "700",
+                            color: isActive ? "#ffffff" : weakText,
+                        }}
                     >
-                    {tab.label}
+                        {tab.label}
                     </Text>
                 </Pressable>
                 );
@@ -606,6 +629,147 @@ export default function CourseLearningsScreen() {
                 </View>
             </View>
             )}
+
+            {/* Reviews Tab */}
+            {activeTab === "reviews" && (() => {
+                // Find if the current logged-in user already submitted a review
+                // We match by checking if the student's user_id matches authUser.id
+                const myReview = courseReviews?.find(
+                    (r) => r.student?.id === loggedInStudentId 
+                );
+
+                return (
+                    <View
+                        style={[reviewStyles.card, { backgroundColor: cardBg, borderColor }]}
+                    >
+                        <Text style={[reviewStyles.sectionTitle, { color: strongText }]}>Course Review</Text>
+
+                        {myReview ? (
+                            /* Already submitted — read-only view */
+                            <View style={{ gap: 12 }}>
+                                <Text style={[reviewStyles.subtitle, { color: weakText }]}>
+                                    Thank you for reviewing this course. Your feedback helps other students make informed decisions.
+                                </Text>
+                                <View style={[reviewStyles.divider, { backgroundColor: borderColor }]} />
+
+                                {/* Stars */}
+                                <View style={reviewStyles.starsRow}>
+                                    {[1,2,3,4,5].map((star) => (
+                                        <Ionicons
+                                            key={star}
+                                            name={star <= myReview.rating ? "star" : "star-outline"}
+                                            size={22}
+                                            color={star <= myReview.rating ? "#f59e0b" : borderColor}
+                                        />
+                                    ))}
+                                    <Text style={[reviewStyles.ratingLabel, { color: strongText }]}>
+                                        {myReview.rating} / 5
+                                    </Text>
+                                </View>
+
+                                {myReview.review ? (
+                                    <View style={[reviewStyles.reviewTextBox, { backgroundColor: mutedBg, borderColor }]}>
+                                        <Text style={[reviewStyles.reviewItalic, { color: strongText }]}>
+                                            "{myReview.review}"
+                                        </Text>
+                                    </View>
+                                ) : (
+                                    <Text style={[reviewStyles.noCommentText, { color: weakText }]}>
+                                        No written comment provided.
+                                    </Text>
+                                )}
+
+                                <View style={{ alignItems: "flex-end" }}>
+                                    <View style={reviewStyles.submittedBadge}>
+                                        <Ionicons name="checkmark-circle" size={14} color="#059669" />
+                                        <Text style={reviewStyles.submittedBadgeText}>Submitted</Text>
+                                    </View>
+                                </View>
+                            </View>
+                        ) : (
+                            /* Form to submit review */
+                            <View style={{ gap: 12 }}>
+                                <Text style={[reviewStyles.subtitle, { color: weakText }]}>
+                                    How would you rate this course? Share your learning experience to help other students.
+                                </Text>
+                                <View style={[reviewStyles.divider, { backgroundColor: borderColor }]} />
+
+                                {/* Rating label */}
+                                <Text style={[reviewStyles.inputLabel, { color: strongText }]}>Rating</Text>
+
+                                {/* Star Picker */}
+                                <View style={reviewStyles.starsRow}>
+                                    {[1,2,3,4,5].map((star) => (
+                                        <Pressable
+                                            key={star}
+                                            onPress={() => setRating(star)}
+                                            style={({ pressed }) => ({
+                                                opacity: pressed ? 0.7 : 1,
+                                                transform: [{ scale: pressed ? 0.9 : 1 }],
+                                            })}
+                                        >
+                                            <Ionicons
+                                                name={star <= rating ? "star" : "star-outline"}
+                                                size={34}
+                                                color={star <= rating ? "#f59e0b" : borderColor}
+                                            />
+                                        </Pressable>
+                                    ))}
+                                </View>
+
+                                {/* Rating hint */}
+                                {rating > 0 && (
+                                    <Text style={[reviewStyles.ratingHint, { color: primaryColor }]}>
+                                        {["" ,"Poor","Fair","Good","Very Good","Excellent"][rating]}
+                                    </Text>
+                                )}
+
+                                {/* Text input */}
+                                <Text style={[reviewStyles.inputLabel, { color: strongText, marginTop: 8 }]}>
+                                    Review Description{" "}
+                                    <Text style={{ color: weakText, fontWeight: "400" }}>(Optional)</Text>
+                                </Text>
+                                <TextInput
+                                    value={reviewText}
+                                    onChangeText={setReviewText}
+                                    placeholder="Write your review here..."
+                                    placeholderTextColor={weakText}
+                                    multiline
+                                    numberOfLines={4}
+                                    textAlignVertical="top"
+                                    style={[
+                                        reviewStyles.textInput,
+                                        { backgroundColor: mutedBg, borderColor, color: strongText },
+                                    ]}
+                                />
+
+                                {/* Submit button */}
+                                <Pressable
+                                    onPress={async () => {
+                                        if (rating === 0) {
+                                            Toast.show({ type: "error", text1: "Please select a rating." });
+                                            return;
+                                        }
+                                        if (courseId) {
+                                            await createCourseReview(Number(courseId), rating, reviewText);
+                                            setRating(0);
+                                            setReviewText("");
+                                        }
+                                    }}
+                                    disabled={rating === 0 || isCreatingCourseReview}
+                                    className="bg-primary w-full h-12 items-center justify-center rounded-xl active:scale-95 transition-all duration-200 ease-in-out"
+                                >
+                                    {isCreatingCourseReview ? (
+                                        <ActivityIndicator size="small" color="#ffffff" />
+                                    ) : (
+                                        <Text style={reviewStyles.submitButtonText}>Submit Review</Text>
+                                    )}
+                                </Pressable>
+                            </View>
+                        )}
+                    </View>
+                );
+            })()}
         </ScrollView>
         </ScrollView>
     );

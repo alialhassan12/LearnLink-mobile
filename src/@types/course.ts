@@ -20,4 +20,7 @@ export interface Course{
     category?:Category,
     teacher?:Teacher,
     sections?:CourseSection[],
+    
+    course_reviews_avg_rating?:number;
+    course_reviews_count?:number;
 }

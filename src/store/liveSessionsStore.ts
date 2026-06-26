@@ -1,6 +1,8 @@
 import {create} from 'zustand';
 import type {LiveSession} from '../@types/liveSession';
 import axiosInstance from '../lib/axios';
+import { SessionReview } from '../@types/sessionReview';
+import Toast from 'react-native-toast-message';
 
 
 export interface LiveSessionState{
@@ -22,12 +24,19 @@ export interface LiveSessionState{
     studentSelectedSession:LiveSession |null;
     isGettingStudentSelectedSession:boolean;
     getStudentSelectedSession:(id:number)=>Promise<LiveSession | null>;
+
+    // session reviews
+    sessionReview:SessionReview | null;
+    isCreatingSessionReview:boolean;
+    createSessionReview:(session_id:number,rating:number,review_text?:string)=>Promise<void>;
 }
 
 export const useLiveSessionStore =create<LiveSessionState>((set)=>({
     token:"",
     serverUrl:"",
     sessionId:0,
+
+    sessionReview:null,
 
     isGettingToken:false,
     getToken:async(roomName:string,session_id:number)=>{
@@ -85,6 +94,27 @@ export const useLiveSessionStore =create<LiveSessionState>((set)=>({
             return null;
         }finally{
             set({isGettingStudentSelectedSession:false});
+        }
+    },
+
+    isCreatingSessionReview:false,
+    createSessionReview:async(live_session_id:number,rating:number,review_text?:string)=>{
+        set({isCreatingSessionReview:true});
+        try {
+            const response =await axiosInstance.post('/live-sessions/review/new',{live_session_id,rating,review_text});
+            set({sessionReview:response.data.session_review});
+            Toast.show({
+                type:'success',
+                text1:response.data.message
+            });
+        } catch (error:any) {
+            console.error('Error creating session review:', error?.response?.data?.message || error?.message || 'Unknown error');
+            Toast.show({
+                type:'error',
+                text1:error?.response?.data?.message || error?.message || 'Unknown error'
+            });
+        } finally{
+            set({isCreatingSessionReview:false});
         }
     }
 }));

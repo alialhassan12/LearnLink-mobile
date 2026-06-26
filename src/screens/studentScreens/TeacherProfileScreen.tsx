@@ -121,6 +121,12 @@ export default function TeacherProfile(){
                     <Text className="text-text-strong text-3xl font-bold text-center">{teacher?.user?.name}</Text>
                     <Text className="text-primary text-lg font-light text-center">{teacher?.headline? teacher.headline : "No headline available."}</Text>
                 </View>
+                {/* rating */}
+                <View className="flex flex-row items-center gap-1">
+                    <FontAwesome5 name="star" size={12} color="#eab308"/>
+                    <Text className="text-yellow-500 text-sm font-semibold ">{Number(teacher?.avg_rating).toFixed(1)}</Text>
+                    <Text className="text-sm text-text-weak">({teacher?.review_count} reviews)</Text>
+                </View>
 
                 {/* languages, location */}
                 <View className="flex flex-row gap-2">

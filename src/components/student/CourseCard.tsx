@@ -1,5 +1,6 @@
 import { Course } from "@/src/@types/course";
 import { useCourseEnrollmentStore } from "@/src/store/studentStores/courseEnrollmentStore";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { View, Text, Image, Pressable } from "react-native";
 
@@ -27,20 +28,27 @@ export default function CourseCard({course}:{course:Course}){
                     {course.title}
                 </Text>
                 {/* teacher avatar and name */}
-                <View className="flex flex-row gap-2 items-center border-b border-border pb-4">
-                    {!course.teacher?.user?.avatar_url ? (
-                        <View className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                            <Text className="text-white font-bold text-md">{course.teacher?.user?.name?.charAt(0).toUpperCase()}</Text>
-                        </View>
-                    ) : (
-                        <View className="w-8 h-8 rounded-full overflow-hidden">
-                            <Image
-                                source={{uri:course.teacher?.user?.avatar_url as string}}
-                                className="w-full h-full rounded-full"
-                            />
-                        </View>
-                    )}
-                    <Text className="text-text-weak font-semibold text-md">{course.teacher?.user?.name}</Text>
+                <View className="flex flex-col gap-2  border-b border-border pb-4">
+                    <View className="flex flex-row gap-2 items-center ">
+                        {!course.teacher?.user?.avatar_url ? (
+                            <View className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                                <Text className="text-white font-bold text-md">{course.teacher?.user?.name?.charAt(0).toUpperCase()}</Text>
+                            </View>
+                        ) : (
+                            <View className="w-8 h-8 rounded-full overflow-hidden">
+                                <Image
+                                    source={{uri:course.teacher?.user?.avatar_url as string}}
+                                    className="w-full h-full rounded-full"
+                                />
+                            </View>
+                        )}
+                        <Text className="text-text-weak font-semibold text-md">{course.teacher?.user?.name}</Text>
+                    </View>
+                    <View className="flex flex-row items-center gap-1">
+                        <FontAwesome5 name="star" size={12} color="#eab308"/>
+                        <Text className="text-yellow-500 text-sm font-semibold ">{Number(course.course_reviews_avg_rating).toFixed(1)}</Text>
+                        <Text className="text-sm text-text-weak">({course.course_reviews_count} reviews)</Text>
+                    </View>
                 </View>
 
                 {/* price and enroll */}
