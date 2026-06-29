@@ -25,8 +25,7 @@ export default function MessageButton({recieverUser}:MessageButtonInterface){
         if(conversation){
             setActiveConversation(conversation);
             getMessages(conversation.id);
-            if(authUser?.role == 'student') router.replace({pathname:"/(student)/(Chat)/chat"});
-            // if(authUser?.role == 'teacher') navigate("/dashboard/chat");
+            router.replace("/(Chat)/chat");
             return;
         }
         
@@ -63,8 +62,7 @@ export default function MessageButton({recieverUser}:MessageButtonInterface){
         setActiveConversation(newConversation);
         setMessages([]);
         addConversation(newConversation);
-        if(authUser?.role == 'student') router.replace({pathname:"/(student)/(Chat)/chat"});
-        // if(authUser?.role == 'teacher') navigate("/dashboard/chat");
+        router.replace("/(Chat)/chat");
     }
 
     return (

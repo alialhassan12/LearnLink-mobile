@@ -7,8 +7,11 @@ import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from "rea
 import * as ImagePicker from 'expo-image-picker';
 import { MobileFile } from "@/src/store/chatStore";
 import useAuthStore from "@/src/store/authStore";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 export default function EditProfileScreen() {
+    const {isDark}=useTheme();
+    const strongText=isDark?"#fff":"#000";
     const {setAuthUser,authUser}=useAuthStore();
     const {student,isEditingStudentProfile,editStudentProfile}=useStudentStore();
 
@@ -88,9 +91,9 @@ export default function EditProfileScreen() {
             <View className="flex-row items-center px-4 py-3 bg-bg-2 border-b border-border">
                 <Pressable 
                     onPress={() => router.back()}
-                    className="p-1 rounded-full active:bg-bg-1 mr-3"
+                    className="p-1 active:scale-95 transition-all duration-100 mr-3"
                 >
-                    <Ionicons name="arrow-back" size={24} color="#f8fafc" />
+                    <Ionicons name="arrow-back" size={24} color={strongText} />
                 </Pressable>
                 <Text className="text-xl font-bold ml-4 text-text-strong">Edit Profile</Text>
             </View>

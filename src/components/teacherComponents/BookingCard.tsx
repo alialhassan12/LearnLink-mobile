@@ -40,7 +40,7 @@ export default function BookingCard({ booking }: { booking: Booking }) {
 
     return (
         <View 
-            className={`flex flex-col bg-bg-2 border border-border/80 rounded-2xl w-full p-4 mb-1 border-l-4 ${statusColors.border}`}
+            className={`flex flex-col bg-bg-2 border border-border rounded-2xl w-full p-4 mb-1 border-l-4 ${statusColors.border}`}
         >
             {/* Header info row */}
             <View className="flex-row items-center justify-between w-full">

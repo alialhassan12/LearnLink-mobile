@@ -16,6 +16,10 @@ export default function TeacherLayout(){
                         iconName=focused?'home':'home-outline';
                     }else if(route.name === "Bookings"){
                         iconName=focused?'calendar':'calendar-outline';
+                    }else if(route.name === "(Chat)"){
+                        iconName=focused?'chatbubble':'chatbubble-outline';
+                    }else if(route.name === "(Library)"){
+                        iconName=focused?'library':'library-outline';
                     }
                     return <Ionicons name={iconName as any} size={20} color={focused ? primaryColor : inactiveColor} />;
                 },
@@ -43,6 +47,9 @@ export default function TeacherLayout(){
             })}
         >
             <Tabs.Screen name="Home"/>
+            <Tabs.Screen name="Bookings"/>
+            <Tabs.Screen name="(Library)" options={{title:"Library"}}/>
+            <Tabs.Screen name="(Chat)" options={{title:"Chat"}}/>
         </Tabs>
     );
 }

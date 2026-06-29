@@ -75,10 +75,7 @@ export default function ConversationsScreen() {
 
     const handleSelectConversation = async (conversation: Conversation) => {
         setActiveConversation(conversation);
-        
-        router.push({
-            pathname: "/(student)/(Chat)/chat"
-        });
+        router.push(`/(Chat)/chat`);
         await getMessages(conversation.id);
     };
 

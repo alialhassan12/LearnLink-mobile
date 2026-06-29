@@ -10,6 +10,12 @@ interface CoursStoreState{
     isGettingCourse:boolean;
     getCourse:(id:number)=>Promise<void>;
 
+    //teacher courses
+    teacherCourses:Course[];
+    getTeacherCourses:()=>Promise<boolean>;
+    isGettingTeacherCourses:boolean;
+    maxCoursesAllowed:number;
+
     // course details with its materials
     // for enrolled students and teachers to view and edit course with its materials
     courseWithMaterials:Course | null;
@@ -85,5 +91,28 @@ export const useCourseStore=create<CoursStoreState>((set,get)=>({
         }finally{
             set({isCreatingCourseReview:false});
         }
-    }
+    },
+
+    isGettingTeacherCourses:false,
+    teacherCourses:[],
+    maxCoursesAllowed:0,
+    getTeacherCourses:async()=>{
+        set({isGettingTeacherCourses:true});
+        try{
+            const response=await axiosInstance.get('/courses/my-courses');
+            set({
+                teacherCourses:response.data.courses,
+                maxCoursesAllowed:response.data.max_courses_allowed
+            });
+            return true;
+        }catch(error:any){
+            Toast.show({
+                type:'error',
+                text1:error.response?.data?.message || "An error occurred"
+            });
+            return false;
+        }finally{
+            set({isGettingTeacherCourses:false});
+        }
+    },
 }));

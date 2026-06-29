@@ -10,6 +10,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import Toast from "react-native-toast-message";
 import useBookingStore from "@/src/store/booking";
 import MessageButton from "@/src/components/MessageButton";
+import { useCourseEnrollmentStore } from "@/src/store/studentStores/courseEnrollmentStore";
 
 export default function TeacherProfile(){
     const {isDark}=useTheme();
@@ -17,6 +18,7 @@ export default function TeacherProfile(){
     const {id}=useLocalSearchParams();
     const {teacher,isGettingTeacherById,getTeacherById}=useBrowseStore();
     const {createBooking,isCreatingBooking}=useBookingStore();
+    const {enrolledCoursesIds}=useCourseEnrollmentStore();
 
     const day_of_week=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     const defaultStyles = useDefaultStyles();
@@ -347,11 +349,35 @@ export default function TeacherProfile(){
                                             {/* price and enroll */}
                                             <View className="flex flex-row justify-between items-center mt-2">
                                                 <Text className="text-primary text-lg font-bold">${course.price}</Text>
-                                                <Pressable
-                                                    className="bg-primary rounded-lg px-4 py-2 active:scale-95 transition-all duration-300"
-                                                >
-                                                    <Text className="text-white font-bold">Enroll</Text>
-                                                </Pressable>
+                                                {enrolledCoursesIds.includes(course?.id as number)?(
+                                                    <Pressable
+                                                        onPress={()=>{
+                                                            router.replace({
+                                                                pathname:"/(student)/(Library)/Learnings/CourseLearning",
+                                                                params:{
+                                                                    courseId:course?.id
+                                                                }
+                                                            })
+                                                        }}
+                                                        className="bg-transparent border border-border rounded-lg px-4 py-2 active:scale-95 transition-all duration-300"
+                                                    >
+                                                        <Text className="text-text-strong font-bold">Go to course</Text>
+                                                    </Pressable>
+                                                ):(
+                                                    <Pressable
+                                                        onPress={()=>{
+                                                            router.push({
+                                                                pathname:"/(student)/(Courses)/[CourseId]",
+                                                                params:{
+                                                                    CourseId:course.id?.toString() as string
+                                                                }
+                                                            });
+                                                        }}
+                                                        className="bg-primary rounded-lg px-4 py-2 active:scale-95 transition-all duration-300"
+                                                    >
+                                                        <Text className="text-white font-bold">Enroll</Text>
+                                                    </Pressable>
+                                                )}
                                             </View>
                                         </View>
                                     </View>
