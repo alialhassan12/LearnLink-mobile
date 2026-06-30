@@ -22,7 +22,7 @@ export default function CourseCard({ course }: { course: Course }) {
     const handleViewCourse = () => {
         router.push({
             pathname:"/[CourseId]",
-            params:{CourseId:course.id?.toString()}
+            params:{CourseId:String(course.id)}
         });
     };
 

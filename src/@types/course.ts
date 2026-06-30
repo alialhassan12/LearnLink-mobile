@@ -1,3 +1,4 @@
+import { MobileFile } from "../store/chatStore";
 import { Category } from "./category";
 import { CourseSection } from "./course_sections";
 import { Teacher } from "./teahcer";
@@ -9,7 +10,7 @@ export interface Course{
     teacher_id?:number,
     category_id:number,
     description:string,
-    thumbnail:string | File,
+    thumbnail:string | MobileFile,
     thumbnail_url?:string,
     language:string,
     price:number,

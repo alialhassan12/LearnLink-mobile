@@ -5,6 +5,11 @@ import Toast from "react-native-toast-message";
 import { CourseReview } from "../@types/courseReview";
 
 interface CoursStoreState{
+    newCourse:Course|null;
+
+    isEditingCourse:boolean;
+    editCourse:(course_id:number,data:Course)=>Promise<boolean>;
+
     // student related courses
     course:Course|null;
     isGettingCourse:boolean;
@@ -15,6 +20,9 @@ interface CoursStoreState{
     getTeacherCourses:()=>Promise<boolean>;
     isGettingTeacherCourses:boolean;
     maxCoursesAllowed:number;
+
+    isChangingCourseStatus:boolean;
+    changeCourseStatus:(status:string,course_id:number)=>Promise<boolean>;
 
     // course details with its materials
     // for enrolled students and teachers to view and edit course with its materials
@@ -29,6 +37,7 @@ interface CoursStoreState{
 }
 
 export const useCourseStore=create<CoursStoreState>((set,get)=>({
+    newCourse:null,
     courseReviews:[],
     // student related courses
     course:null,
@@ -68,6 +77,70 @@ export const useCourseStore=create<CoursStoreState>((set,get)=>({
             return false;
         }finally{
             set({isGettingCourseWithMaterialsById:false});
+        }
+    },
+
+    isEditingCourse:false,
+    editCourse:async(course_id:number,data:Course)=>{
+        set({isEditingCourse:true});
+        try {
+            const formData =new FormData();
+            formData.append('course_id',String(course_id));
+            formData.append('category_id',String(data.category_id));
+            formData.append('title',data.title);
+            formData.append('description',data.description);
+            
+            if (data.thumbnail && typeof data.thumbnail === 'object' && 'uri' in data.thumbnail) {
+                formData.append('thumbnail', data.thumbnail as any);
+            }
+            formData.append('language',data.language);
+            formData.append('price',String(data.price));
+            data?.sections?.forEach((section, index) => {
+                if (section?.id) {
+                    formData.append(`sections[${index}][id]`, String(section.id));
+                }
+                formData.append(`sections[${index}][title]`, section?.title);
+                formData.append(`sections[${index}][order]`, String(section?.order));
+                
+                section?.materials?.forEach((material, mIndex) => {
+                    if (material?.id) {
+                        formData.append(`sections[${index}][materials][${mIndex}][id]`, String(material.id));
+                    }
+                    formData.append(`sections[${index}][materials][${mIndex}][title]`, material?.title);
+                    formData.append(`sections[${index}][materials][${mIndex}][type]`, material?.type);
+                    formData.append(`sections[${index}][materials][${mIndex}][size]`, String(Math.round(material?.size!)));
+                    if (material?.file) {
+                        formData.append(`sections[${index}][materials][${mIndex}][file]`, material.file as any);
+                    }
+                });
+            });
+
+            const response=await axiosInstance.put('/courses/edit-course', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            set({
+                newCourse:response.data.course,
+                teacherCourses:get().teacherCourses.map((course)=>course.id===course_id?response.data.course:course)
+            });
+            console.log(response.data);
+            Toast.show({
+                type:'success',
+                text1:response.data.message
+            });
+
+            return true;
+        } catch (error:any) {
+            Toast.show({
+                type:'error',
+                text1:error.response?.data?.message || "An error occurred"
+            });
+            console.log(error.response?.data);
+            return false;
+        }finally{
+            set({isEditingCourse:false});
         }
     },
 
@@ -113,6 +186,30 @@ export const useCourseStore=create<CoursStoreState>((set,get)=>({
             return false;
         }finally{
             set({isGettingTeacherCourses:false});
+        }
+    },
+
+    isChangingCourseStatus:false,
+    changeCourseStatus:async(status:string,course_id:number)=>{
+        set({isChangingCourseStatus:true});
+        try {
+            const response=await axiosInstance.post('/courses/change-course-status',{course_id,status});
+            set({
+                teacherCourses:get().teacherCourses.map((course)=>course.id===course_id?response.data.course:course)
+            });
+            Toast.show({
+                type:'success',
+                text1:response.data.message
+            });
+            return true;
+        } catch (error:any) {
+            Toast.show({
+                type:'error',
+                text1:error.response?.data?.message || "An error occurred"
+            });
+            return false;
+        }finally{
+            set({isChangingCourseStatus:false});
         }
     },
 }));
