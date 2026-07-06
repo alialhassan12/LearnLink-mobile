@@ -15,6 +15,7 @@ import { useCourseEnrollmentStore } from "@/src/store/studentStores/courseEnroll
 export default function TeacherProfile(){
     const {isDark}=useTheme();
     const primaryColor = isDark ? "#3b82f6" : "#2563eb";
+    const borderColor=isDark?"#334155":"#e2e8f0";
     const {id}=useLocalSearchParams();
     const {teacher,isGettingTeacherById,getTeacherById}=useBrowseStore();
     const {createBooking,isCreatingBooking}=useBookingStore();
@@ -279,8 +280,8 @@ export default function TeacherProfile(){
                             paddingHorizontal:12,
                             borderRadius:12,
                             borderWidth:1,
-                            borderColor:primaryColor,
-                            backgroundColor:"#3B82F633",
+                            borderColor:borderColor,
+                            backgroundColor:isDark?"#1e293b": "#f0f9ff",
                         }}
                         textStyle={{
                             color:isDark ? "#fff" : "#1e293b",

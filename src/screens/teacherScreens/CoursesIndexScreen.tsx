@@ -2,6 +2,7 @@ import CourseCard from "@/src/components/teacherComponents/CourseCard";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import { useCourseStore } from "@/src/store/courseStore";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { FlatList, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
@@ -43,6 +44,7 @@ export default function CoursesIndexScreen(){
             </View>
             <Pressable
                 className="w-full p-4 mt-4 bg-primary rounded-xl active:scale-95 transition-all duration-300"
+                onPress={()=>router.push('/CreateCourse/Step1')}
             >
                 <View className="flex flex-row items-center justify-center gap-2">
                     <Ionicons name="add-circle" size={24} color={strongText}/>

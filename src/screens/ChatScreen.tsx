@@ -301,7 +301,11 @@ export default function ChatScreen() {
                 <Text className="text-text-strong text-lg font-bold" style={{ color: strongText }}>
                     No active chat selected
                 </Text>
-                <Pressable onPress={() => router.replace({pathname:"/(student)/(Chat)"})} className="mt-4 bg-primary px-4 py-2 rounded-lg">
+                <Pressable onPress={() => router.replace({
+                        pathname:`${authUser?.role === "teacher" ? "/(teacher)/(Chat)" : "/(student)/(Chat)"}`
+                    })} 
+                    className="mt-4 bg-primary px-4 py-2 rounded-lg"
+                >
                     <Text className="text-white font-semibold">Go Back</Text>
                 </Pressable>
             </SafeAreaView>

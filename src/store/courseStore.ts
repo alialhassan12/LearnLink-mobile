@@ -3,13 +3,22 @@ import { Course } from "../@types/course";
 import axiosInstance from "../lib/axios";
 import Toast from "react-native-toast-message";
 import { CourseReview } from "../@types/courseReview";
+import { CoursePublish } from "../@types/coursePublish";
+import { MobileFile } from "./chatStore";
 
 interface CoursStoreState{
     newCourse:Course|null;
 
+    
+    isPublishing:boolean;
+    setIsPublishing:(isPublishing:boolean)=>void;
+    publishCourse:(data:CoursePublish)=>Promise<boolean>;
+    isSavingDraft:boolean;
+    saveDraftCourse:(data?:CoursePublish)=>Promise<boolean>;
+    
     isEditingCourse:boolean;
     editCourse:(course_id:number,data:Course)=>Promise<boolean>;
-
+    
     // student related courses
     course:Course|null;
     isGettingCourse:boolean;
@@ -210,6 +219,113 @@ export const useCourseStore=create<CoursStoreState>((set,get)=>({
             return false;
         }finally{
             set({isChangingCourseStatus:false});
+        }
+    },
+
+    isPublishing:false,
+    setIsPublishing:(isPublishing:boolean)=>set({isPublishing}),
+    publishCourse:async(data:CoursePublish)=>{
+        set({isPublishing:true});
+        try{
+            const formData = new FormData();
+            formData.append('category_id', String(data?.category_id ?? 0));
+            formData.append('title', data?.title ?? "");
+            formData.append('description', data?.description ?? "");
+            if (data.thumbnail) {
+                formData.append('thumbnail', data.thumbnail as any);
+            }
+            formData.append('language', data?.language ?? "");
+            formData.append('price', String(data?.price ?? 0));
+
+            data.sections.forEach((section, index) => {
+                formData.append(`sections[${index}][title]`, section.title);
+                formData.append(`sections[${index}][order]`, String(section.order));
+                
+                section?.materials?.forEach((material, mIndex) => {
+                    formData.append(`sections[${index}][materials][${mIndex}][title]`, material.title);
+                    formData.append(`sections[${index}][materials][${mIndex}][type]`, material.type);
+                    formData.append(`sections[${index}][materials][${mIndex}][size]`, String(Math.round(material?.size || 0)));
+                    if (material.file) {
+                        formData.append(`sections[${index}][materials][${mIndex}][file]`, material.file as any);
+                    }
+                });
+            });
+
+            const response=await axiosInstance.post('/courses/create-course', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            set({newCourse:response.data.course,teacherCourses:[...get().teacherCourses,response.data.course]});
+            Toast.show({
+                type:"success",
+                text1:response.data.message
+            });
+
+            return true;
+        }catch(error:any){
+            Toast.show({
+                type:"error",
+                text1:error.response?.data?.message || "An error occurred"
+            });
+            return false;
+        }finally{
+            set({isPublishing:false});
+        }
+    },
+
+    isSavingDraft:false,
+    saveDraftCourse:async(data?:CoursePublish)=>{
+        console.log(data?.category_id);
+        console.log(data?.language);
+        set({isSavingDraft:true});
+        try{
+            const formData = new FormData();
+            formData.append('category_id', String(data?.category_id ?? 0));
+            formData.append('title', data?.title ?? '');
+            formData.append('description', data?.description ?? '');
+            if (data?.thumbnail) {
+                formData.append('thumbnail', data?.thumbnail as any);
+            }
+            formData.append('language', data?.language ?? '');
+            formData.append('price', String(data?.price ?? 0));
+
+            data?.sections?.forEach((section, index) => {
+                formData.append(`sections[${index}][title]`, section?.title);
+                formData.append(`sections[${index}][order]`, String(section?.order || 0));
+                
+                section?.materials?.forEach((material, mIndex) => {
+                    formData.append(`sections[${index}][materials][${mIndex}][title]`, material?.title);
+                    formData.append(`sections[${index}][materials][${mIndex}][type]`, material?.type);
+                    formData.append(`sections[${index}][materials][${mIndex}][size]`, String(Math.round(material?.size || 0)));
+                    if (material?.file) {
+                        formData.append(`sections[${index}][materials][${mIndex}][file]`, material?.file as any);
+                    }
+                });
+            });
+
+            const response=await axiosInstance.post('/courses/save-draft', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            set({newCourse:response.data.course,teacherCourses:[...get().teacherCourses,response.data.course]});
+            Toast.show({
+                type:'success',
+                text1:response.data.message
+            });
+
+            return true;
+        }catch(error:any){
+            Toast.show({
+                type:'error',
+                text1:error.response?.data?.message || "An error occurred"
+            });
+            return false;
+        }finally{
+            set({isSavingDraft:false});
         }
     },
 }));

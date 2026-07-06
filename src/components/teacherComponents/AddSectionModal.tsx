@@ -81,9 +81,9 @@ export default function AddSectionModal({
 
                         <TouchableOpacity
                             onPress={handleAdd}
-                            disabled={!sectionName.trim()}
+                            disabled={!sectionName?.trim()}
                             className={`flex-1 rounded-xl py-3 items-center justify-center active:opacity-85 ${
-                                sectionName.trim() ? 'bg-primary' : 'bg-primary/50'
+                                sectionName?.trim() ? 'bg-primary' : 'bg-primary/50'
                             }`}
                         >
                             <Text className="text-white font-bold text-sm">Create Section</Text>

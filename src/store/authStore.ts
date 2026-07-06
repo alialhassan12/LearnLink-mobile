@@ -30,7 +30,7 @@ const useAuthStore=create<useAuthStoreInterface>((set)=>({
             set({authUser:response.data.user});
             Toast.show({
                 type:'success',
-                text1:response.data.message,
+                text1:response?.data?.message,
                 position:"bottom",
                 autoHide:true,
                 visibilityTime:2000,
@@ -39,11 +39,12 @@ const useAuthStore=create<useAuthStoreInterface>((set)=>({
         } catch (error:any) {
             Toast.show({
                 type:'error',
-                text1:error.response.data.message,
+                text1:error?.response?.data?.message,
                 position:"bottom",
                 autoHide:true,
                 visibilityTime:2000,
             });
+            console.log(error);
             return false;
         }finally{
             set({isloggingIn:false});
