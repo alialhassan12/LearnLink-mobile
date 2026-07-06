@@ -17,6 +17,14 @@ export interface LiveSessionState{
     endSession:(session_id:number)=>Promise<void>;
     clearSession:()=>void;
 
+    teacherLiveSessions:LiveSession[];
+    isGettingTeacherLiveSessions:boolean;
+    getTeacherLiveSessions:()=>Promise<void>;
+
+    teacherSelectedSession:LiveSession | null;
+    isGettingTeacherSelectedSession:boolean;
+    getTeacherSelectedSession:(id:number)=>Promise<LiveSession | null>;
+
     studentLiveSessions:LiveSession[];
     isGettingStudentLiveSessions:boolean;
     getStudentLiveSessions:()=>Promise<void>;
@@ -65,6 +73,39 @@ export const useLiveSessionStore =create<LiveSessionState>((set)=>({
     },
 
     clearSession: () => set({ token: "", serverUrl: "", sessionId: 0 }),
+
+    teacherLiveSessions:[],
+    isGettingTeacherLiveSessions:false,
+    getTeacherLiveSessions:async()=>{
+        set({isGettingTeacherLiveSessions:true});
+        try {
+            const response=await axiosInstance.get('/live-sessions/teacher-sessions');
+            set({teacherLiveSessions:response.data.live_sessions});
+        } catch (error:any) {
+            console.error('Error fetching live sessions:', error?.response?.data?.message || error?.message || 'Unknown error');
+        } finally{
+            set({isGettingTeacherLiveSessions:false});
+        }
+    },
+
+    teacherSelectedSession:null,
+    isGettingTeacherSelectedSession:false,
+    getTeacherSelectedSession:async(id:number)=>{
+        set({isGettingTeacherSelectedSession:true});
+        try{
+            const response=await axiosInstance.get(`/live-sessions/teacher-session/${id}`);
+            set({
+                teacherSelectedSession:response.data.session,
+                sessionReview:response.data.session.session_review
+            });
+            return response.data.live_session;
+        }catch(error:any){
+            console.error('Error fetching teacher selected session:', error?.response?.data?.message || error?.message || 'Unknown error');
+            return null;
+        }finally{
+            set({isGettingTeacherSelectedSession:false});
+        }
+    },
 
     studentLiveSessions:[],
     studentSelectedSession:null,

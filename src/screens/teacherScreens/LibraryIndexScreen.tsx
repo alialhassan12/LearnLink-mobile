@@ -16,7 +16,7 @@ export default function LibraryIndexScreen(){
 
     const cards = [
         { id: 0, label: "My Courses", icon: "graduation-cap", navigation:"/(Courses)",img:require("../../../assets/images/coursesCardBg.webp"),description:"Manage curriculum & content"},
-        { id: 1, label: "My Sessions", icon: "video", navigation:"",img:require("../../../assets/images/sessionCardBg.png"),description:"Schedule & live teaching" },
+        { id: 1, label: "My Sessions", icon: "video", navigation:"/(Sessions)",img:require("../../../assets/images/sessionCardBg.png"),description:"Schedule & live teaching" },
     ];
 
     return(

@@ -4,8 +4,8 @@ export default function CoursesLayout(){
     return(
         <Stack screenOptions={{headerShown:false}} >
             <Stack.Screen name="index" />
-            <Stack.Screen name="EditCourse"/>
-            <Stack.Screen name="CreateCourse"/>
+            <Stack.Screen name="(EditCourse)"/>
+            <Stack.Screen name="(CreateCourse)"/>
         </Stack>
     );
 }

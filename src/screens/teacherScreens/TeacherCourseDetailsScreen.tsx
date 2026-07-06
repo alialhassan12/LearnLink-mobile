@@ -282,7 +282,7 @@ export default function TeacherCourseDetailsScreen() {
                                     {review.review ? (
                                         <View className="bg-bg-1 border border-border/60 rounded-xl p-3">
                                             <Text className="text-text-strong text-xs leading-relaxed italic">
-                                                "{review.review}"
+                                                &quot;{review.review}&quot;
                                             </Text>
                                         </View>
                                     ) : (
@@ -301,7 +301,7 @@ export default function TeacherCourseDetailsScreen() {
                         </View>
                         <Text className="text-text-strong text-sm font-semibold">No Reviews Yet</Text>
                         <Text className="text-text-weak text-xs mt-1 text-center max-w-[200px]">
-                            Enrolled students haven't submitted any reviews yet.
+                            Enrolled students haven&apos;t submitted any reviews yet.
                         </Text>
                     </View>
                 )}

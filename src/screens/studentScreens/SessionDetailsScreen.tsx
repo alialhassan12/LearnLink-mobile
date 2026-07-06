@@ -109,7 +109,7 @@ export default function SessionDetailsScreen(){
                 <Ionicons name="calendar-outline" size={48} color={weakText}/>
                 <Text className="text-text-strong text-xl font-bold text-center">Session not found</Text>
                 <Text className="text-text-weak text-sm text-center">
-                    We couldn't load the session details. Please go back and try again.
+                    We couldn&apos;t load the session details. Please go back and try again.
                 </Text>
             </View>
         );
@@ -273,7 +273,7 @@ export default function SessionDetailsScreen(){
                         {sessionReview.review ? (
                             <View style={[reviewStyles.reviewTextBox, { backgroundColor: mutedBg, borderColor }]}>
                                 <Text style={[reviewStyles.reviewItalic, { color: strongText }]}>
-                                    "{sessionReview.review}"
+                                    &quot;{sessionReview.review}&quot;
                                 </Text>
                             </View>
                         ) : (

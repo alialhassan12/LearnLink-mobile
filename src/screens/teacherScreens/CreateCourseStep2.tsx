@@ -184,7 +184,7 @@ export default function CreateCourseStep2(){
                     <View style={{minHeight:300}} className="w-full rounded-xl border-2 border-dashed border-border mt-4 flex-col items-center justify-center">
                         <Ionicons name="folder-open-outline" size={40} color={strongColor} />
                         <Text className="text-text-strong text-sm font-semibold">No sections created yet</Text>
-                        <Text className="text-text-weak text-xs font-medium">Click "Add Section" to create a new section</Text>
+                        <Text className="text-text-weak text-xs font-medium">Click &quot;Add Section&quot; to create a new section</Text>
                     </View>
                 )}
                 {courseSections.length > 0 &&(
