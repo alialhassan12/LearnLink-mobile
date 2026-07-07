@@ -17,6 +17,7 @@ export default function LibraryIndexScreen(){
     const cards = [
         { id: 0, label: "My Courses", icon: "graduation-cap", navigation:"/(Courses)",img:require("../../../assets/images/coursesCardBg.webp"),description:"Manage curriculum & content"},
         { id: 1, label: "My Sessions", icon: "video", navigation:"/(Sessions)",img:require("../../../assets/images/sessionCardBg.png"),description:"Schedule & live teaching" },
+        {id:2,label:"Calendar",icon:"calendar",navigation:"/Calendar",img:require("../../../assets/images/CalendarCardBg.png"),description:"View & manage bookings"}
     ];
 
     return(
@@ -25,7 +26,7 @@ export default function LibraryIndexScreen(){
             contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}
             showsVerticalScrollIndicator={false}
         >
-            <View className="flex flex-row flex-wrap items-center gap-4 p-6 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl mb-6">
+            <View className="flex flex-col w-full items-center gap-4 p-6 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl mb-6">
                 {!authUser?.avatar_url ? (
                     <View className="w-16 h-16 rounded-full border-2 border-primary flex items-center justify-center">
                         <FontAwesome5 name="user" size={24} color={strongText} />

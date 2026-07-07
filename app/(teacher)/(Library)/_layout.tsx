@@ -7,6 +7,7 @@ export default function LibraryLayout(){
         <Stack screenOptions={{headerShown:false}} >
             <Stack.Screen name="index" />
             <Stack.Screen name="(Courses)" />
+            <Stack.Screen name="Calendar"/>
         </Stack>
     );
 }
