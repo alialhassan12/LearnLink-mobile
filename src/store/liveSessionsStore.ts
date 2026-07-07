@@ -98,7 +98,9 @@ export const useLiveSessionStore =create<LiveSessionState>((set)=>({
                 teacherSelectedSession:response.data.session,
                 sessionReview:response.data.session.session_review
             });
-            return response.data.live_session;
+            console.log(response.data.session);
+            return response.data.session;
+            
         }catch(error:any){
             console.error('Error fetching teacher selected session:', error?.response?.data?.message || error?.message || 'Unknown error');
             return null;

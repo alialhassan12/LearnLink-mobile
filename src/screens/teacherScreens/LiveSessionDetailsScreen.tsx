@@ -2,11 +2,15 @@ import type { user } from "@/src/@types/user";
 import MessageButton from "@/src/components/MessageButton";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import useAuthStore from "@/src/store/authStore";
+import { MobileFile } from "@/src/store/chatStore";
 import { useLiveSessionStore } from "@/src/store/liveSessionsStore";
+import { useSessionMaterialsStore } from "@/src/store/sessionMaterialsStore";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect } from "react";
-import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, FlatList, Image, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import * as DocumentPicker from "expo-document-picker";
+import Toast from "react-native-toast-message";
 
 export default function LiveSessionDetailsScreen() {
     const { authUser } = useAuthStore();
@@ -29,10 +33,28 @@ export default function LiveSessionDetailsScreen() {
         isGettingToken,
     } = useLiveSessionStore();
 
+    const {
+        sessionMaterials,
+        setSessionMaterials,
+        uploadMaterials,
+        isuploadingMaterials,
+        deleteSessionMaterial,
+        isDeletingSessionMaterial
+    }=useSessionMaterialsStore();
+
+    const [uploadedFiles,setUploadedFiles]=useState<MobileFile[]>([]);
+    const [selectedFile,setSelectedFile]=useState<number|null>(null);
+
     useEffect(() => {
-        if (SessionId) {
-            getTeacherSelectedSession(Number(SessionId));
+        const getSessionDetails=async()=>{
+            if (SessionId) {
+                const session=await getTeacherSelectedSession(Number(SessionId));
+                if(session?.session_materials){
+                    setSessionMaterials(session?.session_materials);
+                }
+            }
         }
+        getSessionDetails();
     }, [SessionId, getTeacherSelectedSession]);
 
     const handleStartSession=async()=>{
@@ -44,6 +66,66 @@ export default function LiveSessionDetailsScreen() {
                 router.replace('/SessionRoom');
             }
         }
+    }
+
+    const handleUploadMaterials=async()=>{
+        if(uploadMaterials.length ===0){
+            Toast.show({
+                type:"error",
+                text1:"Please Add Materials to Upload"
+            });
+            return;
+        }
+        try{
+            const data:{
+                live_session_id:number,
+                files:{
+                    fileTitle:string,
+                    fileType:string,
+                    file:MobileFile
+                }[]
+            } = {
+                live_session_id: Number(SessionId),
+                files: uploadedFiles.map((file)=>{
+                    return {
+                        fileTitle:file.name,
+                        fileType:file.type,
+                        file:file
+                    };
+                })
+            }
+            await uploadMaterials(data);
+            setUploadedFiles([]);
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    const handleDeleteSessionMaterial=async(sessionMaterialId:number)=>{
+        setSelectedFile(sessionMaterialId);
+        await deleteSessionMaterial(sessionMaterialId);
+        setSelectedFile(null);
+    }
+
+    const handleAddMaterial=async()=>{
+        const result=await DocumentPicker.getDocumentAsync({
+            type:"*/*",
+            copyToCacheDirectory:true
+        })
+        if(result.canceled) return;
+
+        const file=result.assets[0];
+        const mobileFile:MobileFile={
+            uri:file.uri,
+            type:file.mimeType || "application/octet-stream",
+            name:file.name || "file",
+            size:file.size || 0
+        }
+        setUploadedFiles((prev)=> [...prev,mobileFile]);
+    }
+
+    const handleDeleteUploadedMaterial=(fileTitle:string)=>{
+        setUploadedFiles((prev)=>prev.filter((file)=>file.name !==fileTitle));
     }
 
     if (isGettingTeacherSelectedSession) {
@@ -223,6 +305,105 @@ export default function LiveSessionDetailsScreen() {
                             There is no review for this session yet.
                         </Text>
                     </View>
+                )}
+            </View>
+
+            {/* session materials */}
+            <View
+                className="rounded-3xl border border-border p-6"
+                style={{ backgroundColor: cardBg }}
+            >
+                <View className="flex-row items-center justify-between mb-4">
+                    <Text className="text-xl font-bold tracking-tight text-text-strong">
+                        Session Materials
+                    </Text>
+                    <TouchableOpacity
+                        className="flex-row items-center gap-1 rounded-lg border border-border px-2 py-1"
+                        onPress={handleAddMaterial}
+                    >
+                        <Ionicons name="cloud-upload-outline" size={20} color={primaryColor} />
+                        <Text className="text-sm font-bold text-primary">Add Material</Text>
+                    </TouchableOpacity>
+                </View>
+                {(uploadedFiles.length ===0 && sessionMaterials.length ===0) &&(
+                    <View className="mt-4 items-center justify-center rounded-2xl border border-dashed border-border bg-bg-1 py-8">
+                        <Ionicons name="document-text-outline" size={28} color={weakText} />
+                        <Text className="mt-3 text-center text-sm font-medium text-text-weak">
+                            There is no materials for this session yet.
+                        </Text>
+                    </View>
+                )}
+                {sessionMaterials && sessionMaterials.length >0 &&(
+                    <View className="flex-col gap-2 ">
+                        {sessionMaterials.map((material)=>{
+                            return (
+                            <View key={material.id} className="flex-row items-center justify-between p-3 mb-3 border border-border rounded-2xl">
+                                <View className="flex-row items-center gap-3">
+                                    <FontAwesome5 name="file" size={24} color={primaryColor}/>
+                                    <View className="flex-1 min-w-0">
+                                        <Text className="text-text-weak text-sm font-medium truncate">{material.title}</Text>
+                                        <Text className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-muted text-text-weak">{material.file_type}</Text>
+                                    </View>
+                                    <Pressable
+                                        onPress={()=>handleDeleteSessionMaterial(material.id)}
+                                        disabled={isuploadingMaterials || isDeletingSessionMaterial}
+                                        className="px-2 py-2 z-10 rounded-lg bg-red-500/20 active:opacity-75 transition-colors duration-200"
+                                    >
+                                        {
+                                            selectedFile===material.id?(
+                                                    <ActivityIndicator size="small" color={"red"}/>
+                                                ):(
+                                                    <Ionicons name="trash-outline" size={20} color={"red"}/>
+                                                )
+                                        }
+                                    </Pressable>
+                                </View>
+                            </View>
+                            );
+                        })}
+                    </View>
+                )}
+
+                {uploadedFiles && uploadedFiles.length >0 &&(
+                        uploadedFiles.map((material,index)=>{
+                            return (
+                                <View key={index} className="flex-row items-center justify-between p-3 mb-3 border border-border rounded-2xl">
+                                    <View className="flex-row items-center gap-3">
+                                        <FontAwesome5 name="file" size={24} color={primaryColor}/>
+                                        <View className="flex-1 min-w-0">
+                                            <Text className="text-text-weak text-sm font-medium truncate">{material.name}</Text>
+                                            <Text className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-muted text-text-weak">{material.type}</Text>
+                                        </View>
+                                        <Pressable
+                                            onPress={()=>handleDeleteUploadedMaterial(material.name)}
+                                            disabled={isuploadingMaterials}
+                                            className="px-2 py-2 z-10 rounded-lg bg-red-500/20 active:opacity-75 transition-colors duration-200"
+                                        >
+                                            <Ionicons name="trash-outline" size={20} color={"red"}/>
+                                        </Pressable>
+                                    </View>
+                                </View>
+                            );
+                        })
+                )}
+                {uploadedFiles && uploadedFiles.length >0 &&(
+                    <Pressable
+                        onPress={handleUploadMaterials}
+                        disabled={isuploadingMaterials}
+                        className="flex-row gap-2 p-2 w-full items-center justify-center border border-border rounded-2xl bg-bg-2 active:scale-95 active:bg-primary transition-all duration-200"
+                    >
+                        {isuploadingMaterials?(
+                            <>
+                                <ActivityIndicator size="small" color={primaryColor} />
+                                <Text className="text-text-strong">Uploading Materials...</Text>
+                            </>
+                        ):(
+                            <>
+                                <Ionicons name="save-outline" color={strongText} />
+                                <Text className="text-text-strong">Save Materials</Text>
+                            </>
+                        )}
+                    </Pressable>
                 )}
             </View>
         </ScrollView>
