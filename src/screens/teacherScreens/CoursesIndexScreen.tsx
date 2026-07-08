@@ -57,10 +57,10 @@ export default function CoursesIndexScreen(){
                     <Text className="text-text-weak text-sm">Loading...</Text>
                 ):(
                     <View >
-                        <Text className={`text-sm ${coursesPublishedCount>=maxCoursesAllowed?"text-red-500":"text-text-weak"}`}>
-                            {`${coursesPublishedCount}/${maxCoursesAllowed} courses published`}
+                        <Text className={`text-sm ${coursesPublishedCount>=maxCoursesAllowed && maxCoursesAllowed!==-1?"text-red-500":"text-text-weak"}`}>
+                            {`${coursesPublishedCount}/${maxCoursesAllowed===-1?"Unlimited":maxCoursesAllowed} courses published`}
                         </Text>
-                        {coursesPublishedCount>=maxCoursesAllowed &&(
+                        {coursesPublishedCount>=maxCoursesAllowed && maxCoursesAllowed!==-1 &&(
                             <Text className="text-red-500 line-clamp-2">Upgrade your subscription to publish more courses. You can still save courses as draft.</Text>
                         )}
                     </View>
