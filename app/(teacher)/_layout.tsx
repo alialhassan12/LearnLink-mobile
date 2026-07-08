@@ -20,6 +20,8 @@ export default function TeacherLayout(){
                         iconName=focused?'chatbubble':'chatbubble-outline';
                     }else if(route.name === "(Library)"){
                         iconName=focused?'library':'library-outline';
+                    }else if(route.name === "(Profile)"){
+                        iconName=focused?'person':'person-outline';
                     }
                     return <Ionicons name={iconName as any} size={20} color={focused ? primaryColor : inactiveColor} />;
                 },
@@ -50,6 +52,7 @@ export default function TeacherLayout(){
             <Tabs.Screen name="Bookings"/>
             <Tabs.Screen name="(Library)" options={{title:"Library"}}/>
             <Tabs.Screen name="(Chat)" options={{title:"Chat"}}/>
+            <Tabs.Screen name="(Profile)" options={{title:"Profile"}}/>
         </Tabs>
     );
 }
