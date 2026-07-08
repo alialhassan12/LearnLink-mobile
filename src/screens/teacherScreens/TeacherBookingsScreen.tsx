@@ -172,7 +172,7 @@ const TeacherBookingsEmptyState=()=>{
 
     return(
         <View className="flex-1 justify-center items-center "> 
-            <View className="flex-col gap-2 items-center justify-center  w-full mt-8">
+            <View className="flex-col gap-2 items-center justify-center w-full mt-8">
                 <View className="w-32 h-32 bg-bg-2 rounded-full flex justify-center items-center border border-border">
                     <FontAwesome5 name="calendar" size={46} color={primaryColor} />
                 </View>

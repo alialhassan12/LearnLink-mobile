@@ -83,6 +83,13 @@ export default function ProfileScreen() {
                     >
                         <Text className="text-white font-bold text-sm">Edit Profile</Text>
                     </Pressable>
+                    {/* subscription button */}
+                    <Pressable 
+                        className="w-full mt-5 h-11 bg-primary rounded-xl justify-center items-center active:scale-95 transition-all duration-200 shadow-sm"
+                        onPress={() => router.push("/(teacher)/(Profile)/SubscriptionPlans")}
+                    >
+                        <Text className="text-white font-bold text-sm">Upgrade Subscription</Text>
+                    </Pressable>
                 </View>
             </View>
 

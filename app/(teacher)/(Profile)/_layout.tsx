@@ -5,6 +5,7 @@ export default function ProfileLayout(){
         <Stack>
             <Stack.Screen name="index" options={{headerShown:false}}/>
             <Stack.Screen name="EditProfile" options={{headerShown:false}}/>
+            <Stack.Screen name="SubscriptionPlans" options={{headerShown:false}}/>
         </Stack>
     );
 }
