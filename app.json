@@ -1,15 +1,19 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "LearnLink",
+    "slug": "learnlink_mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "mobile",
+    "scheme": "learnlink_mobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.alialhsn.mobile",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -21,6 +25,7 @@
       "predictiveBackGestureEnabled": false,
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.alialhsn.mobile",
+      "googleServicesFile": "./google-services.json",
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO",
@@ -53,11 +58,25 @@
       "@react-native-community/datetimepicker",
       "expo-font",
       "expo-web-browser",
-      "expo-video"
+      "expo-video",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#ffffff"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "979713f9-bfb2-4163-99a9-cc28a3f92289"
+      }
+    },
+    "owner": "ali-alhsn"
   }
 }

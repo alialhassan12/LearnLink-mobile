@@ -3,6 +3,9 @@
 # dependencies
 node_modules/
 
+#firebase
+learnlink-41a29-firebase-adminsdk-fbsvc-46a5fea6f3.json
+
 # Expo
 .expo/
 dist/

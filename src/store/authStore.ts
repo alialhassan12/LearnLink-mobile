@@ -3,6 +3,8 @@ import { user } from "../@types/user";
 import axiosInstance from "../lib/axios";
 import * as SecureStore from "expo-secure-store";
 import Toast from "react-native-toast-message";
+import { registerPushNotifications } from "../services/notifications";
+import { Platform } from "react-native";
 
 interface useAuthStoreInterface{
     authUser:user |null,
@@ -28,6 +30,16 @@ const useAuthStore=create<useAuthStoreInterface>((set)=>({
             const response=await axiosInstance.post('/auth/login',{email,password});
             await SecureStore.setItemAsync('token',response.data.token);
             set({authUser:response.data.user});
+
+            // register push notifications
+            const token=await registerPushNotifications();
+            if(token){
+                await axiosInstance.post('/notifications/push-token',{
+                    push_token:token,
+                    platform:Platform.OS
+                });
+            }
+
             Toast.show({
                 type:'success',
                 text1:response?.data?.message,
@@ -110,6 +122,16 @@ const useAuthStore=create<useAuthStoreInterface>((set)=>({
             const response=await axiosInstance.post('/auth/register',{name,email,password,password_confirmation,role});
             await SecureStore.setItemAsync('token',response.data.token);
             set({authUser:response.data.user});
+
+            // register push notifications
+            const token=await registerPushNotifications();
+            if(token){
+                await axiosInstance.post('/notifications/push-token',{
+                    push_token:token,
+                    platform:Platform.OS
+                });
+            }
+
             Toast.show({
                 type:'success',
                 text1:response.data.message,

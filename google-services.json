@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "528504871968",
+    "project_id": "learnlink-41a29",
+    "storage_bucket": "learnlink-41a29.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:528504871968:android:b5fdeceb6bcb89b18df045",
+        "android_client_info": {
+          "package_name": "com.alialhsn.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBn49gekcCpRfHalKLI3yzRzkN9zTVX2IU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

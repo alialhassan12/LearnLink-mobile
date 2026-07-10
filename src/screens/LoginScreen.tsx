@@ -10,6 +10,7 @@ import useAuthStore from "../store/authStore";
 import { useCourseEnrollmentStore } from "../store/studentStores/courseEnrollmentStore";
 import { useTheme } from "../providers/ThemeProvider";
 import { useChatStore } from "../store/chatStore";
+import { registerPushNotifications } from "../services/notifications";
 
 
 export default function LoginScreen(){
