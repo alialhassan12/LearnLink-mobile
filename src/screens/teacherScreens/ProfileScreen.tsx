@@ -1,19 +1,28 @@
 import { useTeacherStore } from "@/src/store/teacherStore";
 import { useEffect, useRef } from "react";
-import { ScrollView, View, Text, Image, Pressable, Animated } from "react-native";
+import { ScrollView, View, Text, Image, Pressable, Animated, ActivityIndicator } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import Skeleton from "@/src/components/Skeleton";
 import { router } from "expo-router";
+import useAuthStore from "@/src/store/authStore";
 
 export default function ProfileScreen() {
     const { teacher, getTeacher, isGettingTeacher } = useTeacherStore();
+    const {logout,isLoggingout}=useAuthStore();
     const { isDark } = useTheme();
     const primaryColor = isDark ? "#3b82f6" : "#2563eb";
 
     useEffect(() => {
         getTeacher();
     }, []);
+
+    const handleLogout = async () => {
+        const loggedout = await logout();
+        if (loggedout) {
+            router.replace('/(auth)/Login');
+        }
+    };
 
     if (isGettingTeacher || !teacher) {
         return <ProfileScreenSkeleton />;
@@ -185,6 +194,51 @@ export default function ProfileScreen() {
                         No availability set yet.
                     </Text>
                 )}
+            </View>
+            {/* Security Settings */}
+            <View className="flex flex-col gap-4 p-5 border border-border rounded-3xl bg-bg-2 shadow-sm mb-6">
+                <View className="flex flex-row items-center gap-2">
+                    <FontAwesome5 name="lock" size={14} color={primaryColor} />
+                    <Text className="text-base font-bold text-text-strong">Security Settings</Text>
+                </View>
+                <Text className="text-text-weak text-xs -mt-1 leading-relaxed">
+                    Manage your account credentials and security preferences.
+                </Text>
+                
+                <View className="flex flex-col gap-4 pt-2">
+
+                    {/* Change Password */}
+                    <View className="flex flex-col gap-2 pb-4 border-b border-border">
+                        <Text className="text-sm font-bold text-text-strong">Update Password</Text>
+                        <Text className="text-text-weak text-xs">Regularly change your password to keep your account secure.</Text>
+                        <Pressable className="w-full mt-2 h-11 bg-transparent border border-primary rounded-xl justify-center items-center active:scale-95 transition-all duration-200">
+                            <Text className="text-primary font-bold text-sm">Change Password</Text>
+                        </Pressable>
+                    </View>
+
+                    {/* Logout */}
+                    <View className="flex flex-col gap-2">
+                        <Text className="text-sm font-bold text-text-strong">Logout</Text>
+                        <Text className="text-text-weak text-xs">Logout of your account.</Text>
+                        <Pressable 
+                            className="w-full mt-2 h-11 bg-red-600 rounded-xl justify-center items-center active:scale-95 transition-all duration-200"
+                            onPress={handleLogout}
+                            disabled={isLoggingout}
+                        >
+                            {isLoggingout ? (
+                                <View className="flex flex-row items-center gap-2">
+                                    <ActivityIndicator size="small" color="#fff" />
+                                    <Text className="text-white font-bold text-sm">Logging out...</Text>
+                                </View>
+                            ) : (
+                                <View className="flex flex-row items-center gap-2">
+                                    <FontAwesome5 name="sign-out-alt" size={14} color="#fff" />
+                                    <Text className="text-white font-bold text-sm">Logout</Text>
+                                </View>
+                            )}
+                        </Pressable>
+                    </View>
+                </View>
             </View>
         </ScrollView>
     );
