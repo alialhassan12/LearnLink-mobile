@@ -1,11 +1,12 @@
 import useAuthStore from "@/src/store/authStore";
-import { Image, Text, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 
 import { useTheme } from "@/src/providers/ThemeProvider";
 import ToggleThemeButton from "../ToggleThemeButton";
+import { router } from "expo-router";
 
 export default function Header(){
     const {authUser}=useAuthStore();
@@ -26,7 +27,9 @@ export default function Header(){
                     <ToggleThemeButton />
 
                     {/* notification */}
-                    <FontAwesome5 name="bell" size={24} color={primaryColor} />
+                    <TouchableOpacity onPress={()=>router.push("/Notifications")}>
+                        <FontAwesome5 name="bell" size={24} color={primaryColor} />
+                    </TouchableOpacity>
 
                     {/* avatar */}
                     <View>

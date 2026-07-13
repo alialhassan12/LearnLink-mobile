@@ -118,8 +118,8 @@ function PlanCard({
     const formatDuration = (days: number | null) => {
         if (days === 30) return "month";
         if (days === 365) return "year";
-        if (days !== null) return `${days} days`;
-        return "life time";
+        if (days === -1) return "Lifetime";
+        return `${days} days`;
     };
 
     return (

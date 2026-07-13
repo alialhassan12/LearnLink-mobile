@@ -43,6 +43,7 @@ export default function TeacherLayout(){
                     shadowRadius: 8,
                 },
                 headerShown:true,
+                
                 header:()=><Header/>,
                 animation:"shift",
                 tabBarHideOnKeyboard:true,

@@ -1,7 +1,3 @@
-import Bookings from "@/app/(teacher)/Bookings";
-import { Booking } from "@/src/@types/booking";
-import { user } from "@/src/@types/user";
-import MessageButton from "@/src/components/MessageButton";
 import BookingCard from "@/src/components/teacherComponents/BookingCard";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import useBookingStore from "@/src/store/booking";
@@ -9,6 +5,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Animated, FlatList, Image, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Skeleton from "@/src/components/Skeleton";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TeacherBookingsScreen(){
     const {isDark}=useTheme();
@@ -69,8 +66,9 @@ export default function TeacherBookingsScreen(){
     
 
     return (
-        <View
-            className="px-4 w-full" 
+        <SafeAreaView
+            className="flex-1 bg-bg-1 px-4"
+            edges={['top', 'left', 'right','bottom']}
         >
             {teacherBookings.length === 0 &&(
                 <TeacherBookingsEmptyState/>
@@ -147,7 +145,7 @@ export default function TeacherBookingsScreen(){
                     />
                 </View>
             )}
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -171,7 +169,7 @@ const TeacherBookingsEmptyState=()=>{
     ];
 
     return(
-        <View className="flex-1 justify-center items-center "> 
+        <View className="justify-center items-center ">
             <View className="flex-col gap-2 items-center justify-center w-full mt-8">
                 <View className="w-32 h-32 bg-bg-2 rounded-full flex justify-center items-center border border-border">
                     <FontAwesome5 name="calendar" size={46} color={primaryColor} />
@@ -248,7 +246,7 @@ const TeacherBookingsSkeleton=()=>{
                 {[1, 2, 3, 4].map((i) => (
                     <Skeleton
                         key={i}
-                        className="rounded-full px-6 py-3 border-2 mb-5 h-14 w-28"
+                        className="rounded-full px-6 py-3 border-2 border-border mb-5 h-14 w-28"
                         animatedStyle={animatedStyle}
                     />
                 ))}
@@ -259,7 +257,7 @@ const TeacherBookingsSkeleton=()=>{
                 {[1, 2, 3].map((i) => (
                     <View
                         key={i}
-                        className="flex flex-col bg-bg-2 border border-border/80 rounded-2xl w-full p-4 border-l-4 border-l-border"
+                        className="flex flex-col bg-bg-2 border border-border rounded-2xl w-full p-4 border-l-4 border-l-border"
                         style={{ opacity: 0.8 }}
                     >
                         {/* Header info row skeleton */}
@@ -283,7 +281,7 @@ const TeacherBookingsSkeleton=()=>{
                         </View>
 
                         {/* Separator line */}
-                        <View className="h-[1px] bg-border/60 my-3" />
+                        <View className="h-[1px] bg-border my-3" />
 
                         {/* Date and Time Info */}
                         <View className="flex-row items-center gap-2">
