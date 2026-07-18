@@ -2,6 +2,7 @@ import { Teacher } from "@/src/@types/teahcer";
 import Input from "@/src/components/Input";
 import BookingCard from "@/src/components/student/BookingCard";
 import TeachersCard from "@/src/components/student/TeachersCard";
+import { TeachersFilterSheet } from "@/src/components/student/TeachersFilterSheet";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import { useBrowseStore } from "@/src/store/studentStores/browseStore";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -12,18 +13,28 @@ import { FlatList, Image, Pressable, ScrollView, Text, View } from "react-native
 export default function TeachersScreen(){
     const {isDark}=useTheme();
     const strongText = isDark ? "#f8fafc" : "#0f172a";
-    const {teachers,isGettingTeachers,getTeachers,teachersPaginationData}=useBrowseStore();
-
+    const {teachers,isGettingTeachers,getTeachers,teachersPaginationData,getLanguages,getSubjects,isGettingFilters,setIsGettingFilters,teacherFilter,setTeacherFilter,clearTeacherFilter}=useBrowseStore();
 
     const scrollRef=useRef<FlatList>(null);
 
-
+    const [showFilterSheet,setShowFilterSheet]=useState<boolean>(false);
 
     useEffect(()=>{
         if(teachers.length===0){
             getTeachers(1);
         }
     },[getTeachers]);
+
+    useEffect(()=>{
+        getFilters();
+    },[]);
+
+    const getFilters=async()=>{
+        setIsGettingFilters(true);
+        await getLanguages();
+        await getSubjects();
+        setIsGettingFilters(false);
+    }
 
     const handleScrollToTop=()=>{
         scrollRef.current?.scrollToOffset({
@@ -42,6 +53,8 @@ export default function TeachersScreen(){
         }
     }
 
+    const isLoadingTeachersWithFilters=isGettingTeachers || isGettingFilters;
+
     return(
         <View style={{ flex: 1 }}>
             <View 
@@ -51,6 +64,7 @@ export default function TeachersScreen(){
                 <View className="flex flex-row justify-between items-center">
                     <Text className="text-2xl font-bold text-text-strong">Find Teachers</Text>
                     <Pressable
+                        onPress={() => setShowFilterSheet(true)}
                         className="p-3 bg-bg-2 rounded-lg border border-border"
                     >
                         <FontAwesome5 name="sliders-h" size={20} color={strongText}/>
@@ -64,11 +78,15 @@ export default function TeachersScreen(){
                         placeholder="Search by subject, name..."
                         placeholderTextColor={strongText}
                         className="pl-12 rounded-lg"
+                        value={teacherFilter.search_query}
+                        onChangeText={(text) => setTeacherFilter({ ...teacherFilter, search_query: text })}
+                        onSubmitEditing={() => getTeachers(1)}
+                        returnKeyType="search"
                     />
                 </View>
 
                 {/* teachers list */}
-                {isGettingTeachers?(
+                {isLoadingTeachersWithFilters || isGettingTeachers?(
                     <FlatList
                         showsVerticalScrollIndicator={false}
                         style={{marginBottom:200}}
@@ -100,14 +118,27 @@ export default function TeachersScreen(){
                         showsVerticalScrollIndicator={false}
                         style={{marginBottom:200}}
                         ListEmptyComponent={
-                            <View className="flex justify-center items-center">
+                            <View className="flex justify-center items-center mt-6">
                                 <Text className="text-text-strong">No teachers found </Text>
-                                <Text className="text-text-weak">try to adjust the filter settings or search again.</Text>
+                                <Text className="text-text-weak">Try adjusting the filter settings or search again.</Text>
+                                <Pressable
+                                    onPress={()=>{
+                                        clearTeacherFilter();
+                                        getTeachers(1);
+                                    }}
+                                    className="px-4 py-2 bg-bg-2 rounded-lg border border-border mt-4"
+                                >
+                                    <Text className="text-text-strong">Clear Filters</Text>
+                                </Pressable>
                             </View>
                         }
                     />
                 )}
             </View>
+            <TeachersFilterSheet
+                visible={showFilterSheet}
+                onClose={() => setShowFilterSheet(false)}
+            />
         </View>
     );
 }

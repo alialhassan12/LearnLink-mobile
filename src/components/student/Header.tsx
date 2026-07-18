@@ -24,7 +24,7 @@ export default function Header(){
 
                 <View className="flex flex-row items-center gap-4">
                     {/* theme toggle */}
-                    <ToggleThemeButton />
+                    {/* <ToggleThemeButton /> */}
 
                     {/* notification */}
                     <TouchableOpacity onPress={()=>router.push("/Notifications")}>

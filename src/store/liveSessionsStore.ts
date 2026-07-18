@@ -130,7 +130,10 @@ export const useLiveSessionStore =create<LiveSessionState>((set)=>({
         set({isGettingStudentSelectedSession:true});
         try{
             const response = await axiosInstance.get(`/live-sessions/student-session/${id}`);
-            set({studentSelectedSession:response.data.session});
+            set({
+                studentSelectedSession:response.data.session,
+                sessionReview:response.data.session.session_review
+            });
             return response.data.live_session;
         }catch(error:any){
             console.error('Error fetching student selected session:',error?.response?.data?.message || error?.message);

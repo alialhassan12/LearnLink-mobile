@@ -4,7 +4,7 @@ import useBookingStore from "@/src/store/booking";
 import { useCourseStore } from "@/src/store/courseStore";
 import { useLiveSessionStore } from "@/src/store/liveSessionsStore";
 import { useEffect } from "react";
-import { View, Text, FlatList, Pressable, Image } from "react-native";
+import { View, Text, FlatList, Pressable, Image, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -59,12 +59,7 @@ export default function TeacherHomeScreen() {
 
     if (isLoading && !teacher) {
         return (
-            <SafeAreaView className="flex-1 bg-bg-1">
-                <View className="flex-1 items-center justify-center gap-3">
-                    <Ionicons name="hourglass-outline" size={32} color="#64748b" />
-                    <Text className="text-text-weak text-sm">Loading your dashboard...</Text>
-                </View>
-            </SafeAreaView>
+            <TeacherHomeScreenSkeleton/>
         );
     }
 
@@ -240,3 +235,68 @@ export default function TeacherHomeScreen() {
         </SafeAreaView>
     );
 }
+
+const TeacherHomeScreenSkeleton = () => {
+    return (
+        <SafeAreaView className="flex-1 bg-bg-1">
+            <ScrollView className="px-4 pt-2 gap-6" showsVerticalScrollIndicator={false}>
+                {/* Greeting Skeleton */}
+                <View className="gap-2 mt-2">
+                    <View className="h-4 w-28 bg-bg-2 rounded animate-pulse" />
+                    <View className="h-8 w-44 bg-bg-2 rounded animate-pulse" />
+                </View>
+
+                {/* Quick Stats Skeleton */}
+                <View className="flex-row gap-3 mt-2">
+                    {Array.from({ length: 3 }).map((_, idx) => (
+                        <View key={idx} className="flex-1 h-24 bg-bg-2 border border-border rounded-2xl p-4 gap-2 justify-center items-center animate-pulse" />
+                    ))}
+                </View>
+
+                {/* Pending Bookings Skeleton */}
+                <View className="gap-3">
+                    <View className="flex-row items-center justify-between">
+                        <View className="h-6 w-44 bg-bg-2 rounded animate-pulse" />
+                        <View className="h-4 w-12 bg-bg-2 rounded animate-pulse" />
+                    </View>
+                    <View className="gap-2">
+                        {Array.from({ length: 2 }).map((_, idx) => (
+                            <View key={idx} className="h-20 w-full bg-bg-2 border border-border rounded-2xl animate-pulse" />
+                        ))}
+                    </View>
+                </View>
+
+                {/* Upcoming Sessions Skeleton */}
+                <View className="gap-3">
+                    <View className="flex-row items-center justify-between">
+                        <View className="h-6 w-44 bg-bg-2 rounded animate-pulse" />
+                        <View className="h-4 w-12 bg-bg-2 rounded animate-pulse" />
+                    </View>
+                    <View className="gap-2">
+                        {Array.from({ length: 2 }).map((_, idx) => (
+                            <View key={idx} className="h-16 w-full bg-bg-2 border border-border rounded-2xl animate-pulse" />
+                        ))}
+                    </View>
+                </View>
+
+                {/* My Courses Skeleton */}
+                <View className="gap-3">
+                    <View className="flex-row items-center justify-between">
+                        <View className="h-6 w-32 bg-bg-2 rounded animate-pulse" />
+                        <View className="h-4 w-12 bg-bg-2 rounded animate-pulse" />
+                    </View>
+                    <View className="flex-row gap-3">
+                        <View className="h-36 w-64 bg-bg-2 border border-border rounded-2xl animate-pulse" />
+                        <View className="h-36 w-32 bg-bg-2 border border-border rounded-2xl opacity-50 animate-pulse" />
+                    </View>
+                </View>
+
+                {/* Quick Actions Skeleton */}
+                <View className="gap-3 mb-10">
+                    <View className="h-6 w-32 bg-bg-2 rounded animate-pulse" />
+                    <View className="h-28 w-full bg-bg-2 border border-border rounded-2xl animate-pulse" />
+                </View>
+            </ScrollView>
+        </SafeAreaView>
+    );
+};

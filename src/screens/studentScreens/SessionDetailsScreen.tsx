@@ -410,10 +410,59 @@ export default function SessionDetailsScreen(){
     );
 }
 
-const SessionDetailsSkeleton=()=>{
-    return(
-        <View className="flex-1 bg-bg-1 items-center justify-center">
-            <Text className="text-text-strong text-2xl font-bold">Session Loading...</Text>
-        </View>
+const SessionDetailsSkeleton = () => {
+    return (
+        <ScrollView 
+            className="px-4 w-full bg-bg-1 pt-4" 
+            contentContainerStyle={{ paddingBottom: 100, gap: 16 }}
+            showsVerticalScrollIndicator={false}
+        >
+            {/* Hero join card skeleton */}
+            <View className="h-56 bg-bg-2 border border-border rounded-[32px] p-6 justify-center items-center gap-4 animate-pulse">
+                <View className="w-16 h-16 bg-bg-1 rounded-2xl" />
+                <View className="h-6 w-48 bg-bg-1 rounded" />
+                <View className="h-4 w-32 bg-bg-1 rounded" />
+            </View>
+
+            {/* Details card skeleton */}
+            <View className="p-6 bg-bg-2 border border-border rounded-3xl gap-4">
+                <View className="h-6 w-24 bg-bg-1 rounded mb-2 animate-pulse" />
+                <View className="h-12 w-full bg-bg-1 rounded-xl animate-pulse" />
+                
+                {/* User */}
+                <View className="flex-row items-center gap-3 p-3 rounded-2xl bg-bg-1 border border-border animate-pulse">
+                    <View className="w-12 h-12 rounded-full bg-bg-2" />
+                    <View className="flex-1 gap-1">
+                        <View className="h-4 w-28 bg-bg-2 rounded" />
+                        <View className="h-3 w-10 bg-bg-2 rounded" />
+                    </View>
+                </View>
+
+                {/* Teacher */}
+                <View className="flex-row items-center gap-3 p-3 rounded-2xl bg-bg-1 border border-border animate-pulse">
+                    <View className="w-12 h-12 rounded-full bg-bg-2" />
+                    <View className="flex-1 gap-1">
+                        <View className="h-4 w-32 bg-bg-2 rounded" />
+                        <View className="h-3 w-16 bg-bg-2 rounded" />
+                    </View>
+                </View>
+            </View>
+
+            {/* Session Review skeleton */}
+            <View className="p-6 bg-bg-2 border border-border rounded-3xl gap-4 animate-pulse">
+                <View className="h-6 w-36 bg-bg-1 rounded" />
+                <View className="h-4 w-full bg-bg-1 rounded" />
+                <View className="h-4 w-2/3 bg-bg-1 rounded" />
+            </View>
+
+            {/* Session Materials skeleton */}
+            <View className="p-6 bg-bg-2 border border-border rounded-3xl gap-4 animate-pulse">
+                <View className="flex-row justify-between items-center mb-2">
+                    <View className="h-6 w-40 bg-bg-1 rounded" />
+                    <View className="h-4 w-12 bg-bg-1 rounded" />
+                </View>
+                <View className="h-16 w-full bg-bg-1 rounded-2xl" />
+            </View>
+        </ScrollView>
     );
-}
+};

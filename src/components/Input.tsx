@@ -10,7 +10,9 @@ export default function Input({
     onChangeText,
     disabled,
     multiline,
-    numberOfLines
+    numberOfLines,
+    onSubmitEditing,
+    returnKeyType
 }:{
     className?:string;
     placeholder?:string;
@@ -22,6 +24,8 @@ export default function Input({
     disabled?:boolean;
     multiline?:boolean;
     numberOfLines?:number;
+    onSubmitEditing?:()=>void;
+    returnKeyType?:"done" | "go" | "next" | "search" | "send";
 }){
     return(
         <TextInput
@@ -35,6 +39,8 @@ export default function Input({
             keyboardType={keyboardType as any}
             multiline={multiline}
             numberOfLines={numberOfLines}
+            onSubmitEditing={onSubmitEditing}
+            returnKeyType={returnKeyType}
         />
     );
 }

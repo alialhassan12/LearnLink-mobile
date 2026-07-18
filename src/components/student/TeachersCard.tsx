@@ -4,7 +4,6 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Image, Pressable, Text, View } from "react-native";
 import { useState } from "react";
-import { useBrowseStore } from "@/src/store/studentStores/browseStore";
 import BookingCard from "./BookingCard";
 import ProTeacherBadge from "./ProTeacherBadge";
 
@@ -95,12 +94,7 @@ export default function TeachersCard({teacher}:{teacher:Teacher}){
                             View Profile
                         </Text>
                     </Pressable>
-                    <Pressable
-                        onPress={()=>handleSetBookingState(teacher)}
-                        className="w-full bg-primary  text-white py-3 rounded-lg items-center active:bg-transparent active:scale-95 transition-all duration-300 group"
-                    >
-                        <Text className="text-white text-md font-bold group-active:text-primary">Book Session</Text>
-                    </Pressable>
+
                 </View>
             </View>
             {selectedTeacher &&(

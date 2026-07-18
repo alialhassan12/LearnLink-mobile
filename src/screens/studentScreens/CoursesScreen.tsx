@@ -1,25 +1,35 @@
+import Input from "@/src/components/Input";
 import CourseCard from "@/src/components/student/CourseCard";
 import { useTheme } from "@/src/providers/ThemeProvider";
+import useCategoryStore from "@/src/store/categoryStore";
 import { useBrowseStore } from "@/src/store/studentStores/browseStore";
 import { useCourseEnrollmentStore } from "@/src/store/studentStores/courseEnrollmentStore";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { RelativePathString, router } from "expo-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { View, Text, ScrollView, Pressable, Image, FlatList } from "react-native";
+import { CoursesFilterSheet } from "@/src/components/student/CoursesFilterSheet";
 
 export default function CoursesScreen(){
     const {isDark}=useTheme();
     const strongText = isDark ? "#f8fafc" : "#0f172a";
-    const {courses,getCourses,isGettingCourses,coursesPaginationData}=useBrowseStore();
+    const {courses,getCourses,isGettingCourses,coursesPaginationData,courseFilters,setCourseFilters,clearCourseFilters}=useBrowseStore();
+    const {getCategories,isGettingCategories}=useCategoryStore();
     const {enrolledCoursesIds}=useCourseEnrollmentStore();
 
     const scrollRef=useRef<FlatList>(null);
+
+    const [showFilterSheet,setShowFilterSheet]=useState<boolean>(false);
 
     useEffect(()=>{
         if(courses.length===0){
             getCourses(1);
         }
-    },[getCourses])
+    },[getCourses]);
+
+    useEffect(()=>{
+        getCategories();
+    },[getCategories]);
 
     const handleScrollToTop=()=>{
         scrollRef.current?.scrollToOffset({
@@ -38,20 +48,37 @@ export default function CoursesScreen(){
         }
     }
 
+    const isLoadingCoursesWithFilters=isGettingCategories || isGettingCourses;
+
     return(
         <View className="w-full px-4">
             {/* top section with filters */}
             <View className="flex flex-row justify-between items-center mb-4">
                 <Text className="text-2xl font-bold text-text-strong">Explore Courses</Text>
                 <Pressable
+                    onPress={() => setShowFilterSheet(true)}
                     className="p-3 bg-bg-2 rounded-lg border border-border"
                 >
                     <FontAwesome5 name="sliders-h" size={20} color={strongText}/>
                 </Pressable>
             </View>
 
+            {/* searchbar */}
+            <View className="relative mt-4 mb-4">
+                <FontAwesome5 className="absolute top-4 left-4 z-10" name="search" size={18} color={strongText}/>
+                <Input
+                    placeholder="Search by category, name..."
+                    placeholderTextColor={strongText}
+                    className="pl-12 rounded-lg"
+                    value={courseFilters.search_query}
+                    onChangeText={(text) => setCourseFilters({ ...courseFilters, search_query: text })}
+                    onSubmitEditing={() => getCourses(1)}
+                    returnKeyType="search"
+                />
+            </View>
+
             {/* flatlist for courses */}
-            {isGettingCourses?(
+            {isLoadingCoursesWithFilters || isGettingCourses?(
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     style={{marginBottom:140}}
@@ -67,7 +94,7 @@ export default function CoursesScreen(){
                 <FlatList
                     ref={scrollRef}
                     data={courses}
-                    style={{marginBottom:140}}
+                    style={{marginBottom:220}}
                     showsVerticalScrollIndicator={false}
                     renderItem={({item})=>(
                         <View className="w-full mb-2">
@@ -80,13 +107,26 @@ export default function CoursesScreen(){
                     onEndReachedThreshold={0.5}
                     keyExtractor={(item)=>String(item.id)}
                     ListEmptyComponent={
-                        <View className="flex justify-center items-center">
+                        <View className="flex justify-center items-center mt-6">
                             <Text className="text-text-strong">No courses found </Text>
-                            <Text className="text-text-weak">try to adjust the filter settings or search again.</Text>
+                            <Text className="text-text-weak">Try adjusting the filter settings or search again.</Text>
+                            <Pressable
+                                onPress={()=>{
+                                    clearCourseFilters();
+                                    getCourses(1);
+                                }}
+                                className="px-4 py-2 bg-bg-2 rounded-lg border border-border mt-4"
+                            >
+                                <Text className="text-text-strong">Clear Filters</Text>
+                            </Pressable>
                         </View>
                     }
                 />
             )}
+            <CoursesFilterSheet
+                visible={showFilterSheet}
+                onClose={() => setShowFilterSheet(false)}
+            />
         </View>
     );
 }

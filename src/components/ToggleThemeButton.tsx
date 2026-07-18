@@ -1,6 +1,6 @@
 import { useTheme } from "@/src/providers/ThemeProvider";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Switch, Text, View } from "react-native";
 
 export default function ToggleThemeButton() {
     const { toggleTheme,isDark } = useTheme();
@@ -9,12 +9,12 @@ export default function ToggleThemeButton() {
     const color = isDark ? "#3b82f6" : "#2563eb";
 
     return (
-        <Pressable
-            onPress={toggleTheme}
-        >
-            <View>
-                <Ionicons name={icon} size={24} color={color} />
-            </View>
-        </Pressable>
+        <Switch
+            trackColor={{false:"#767577",true:"#81b0ff"}}
+            thumbColor={isDark?"#f5dd4b":"#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleTheme}
+            value={isDark}
+        />
     );
 }

@@ -59,6 +59,20 @@ export default function TeacherBookingsScreen(){
             setIsLoadingMore(false);
         }
     }
+    const handleNext=async()=>{
+        if(teacherBookingsPagination?.current_page === teacherBookingsPagination?.last_page) return;
+        setIsLoadingMore(true);
+        await getTeacherBookingsWithNoLoading(teacherBookingsPagination?.current_page! + 1)
+        handleScrollToTop();
+        setIsLoadingMore(false);
+    }
+    const handlePrev=async()=>{
+        if(teacherBookingsPagination?.current_page === 1) return;
+        setIsLoadingMore(true);
+        await getTeacherBookingsWithNoLoading(teacherBookingsPagination?.current_page! - 1)
+        handleScrollToTop();
+        setIsLoadingMore(false);
+    }
 
     if(isGettingTeacherBookings){
         return <TeacherBookingsSkeleton/>
@@ -117,7 +131,7 @@ export default function TeacherBookingsScreen(){
                     <FlatList
                         ref={scrollRef}
                         className="w-full"
-                        style={{marginBottom:410}}
+                        style={{marginBottom:250}}
                         contentContainerStyle={{gap:12}}
                         data={filteredBookings}
                         renderItem={({item})=><BookingCard booking={item}/>}
@@ -129,18 +143,28 @@ export default function TeacherBookingsScreen(){
                             getTeacherBookings(1);
                             handleScrollToTop();
                         }}
-                        onEndReached={handleLoadMore}
-                        onEndReachedThreshold={0.5}
+                        // onEndReached={handleLoadMore}
+                        // onEndReachedThreshold={0.5}
                         ListFooterComponent={
-                            ()=>{
-                                if(isLoadingMore){
-                                    return(
-                                        <View className="flex justify-center items-center py-4">
-                                            <ActivityIndicator size="large" color={primaryColor} />
-                                        </View>
-                                    )
-                                }
-                            }
+                            ()=>( 
+                                <View className="flex-row justify-center items-center py-4 gap-4">
+                                <TouchableOpacity
+                                    onPress={handlePrev}
+                                    disabled={teacherBookingsPagination?.current_page === 1}
+                                    className={`px-6 py-3 rounded-xl ${teacherBookingsPagination?.current_page === 1 ? 'bg-bg-2' : 'bg-primary'}`}
+                                >
+                                    <FontAwesome5 name="arrow-left" size={16} color={strongText} />
+                                </TouchableOpacity>
+                                <Text className="text-text-strong font-semibold">Page {teacherBookingsPagination?.current_page} of {teacherBookingsPagination?.last_page}</Text>
+                                <TouchableOpacity
+                                    onPress={handleNext}
+                                    disabled={teacherBookingsPagination?.current_page === teacherBookingsPagination?.last_page}
+                                    className={`px-6 py-3 rounded-xl ${teacherBookingsPagination?.current_page === teacherBookingsPagination?.last_page ? 'bg-bg-2' : 'bg-primary'}`}
+                                >
+                                    <FontAwesome5 name="arrow-right" size={16} color={strongText} />
+                                </TouchableOpacity>
+                            </View>
+                            )
                         }
                     />
                 </View>

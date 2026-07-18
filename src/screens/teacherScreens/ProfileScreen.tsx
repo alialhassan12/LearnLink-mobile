@@ -6,6 +6,7 @@ import { useTheme } from "@/src/providers/ThemeProvider";
 import Skeleton from "@/src/components/Skeleton";
 import { router } from "expo-router";
 import useAuthStore from "@/src/store/authStore";
+import ToggleThemeButton from "@/src/components/ToggleThemeButton";
 
 export default function ProfileScreen() {
     const { teacher, getTeacher, isGettingTeacher } = useTeacherStore();
@@ -206,6 +207,13 @@ export default function ProfileScreen() {
                 </Text>
                 
                 <View className="flex flex-col gap-4 pt-2">
+                    <View className="flex flex-row items-center justify-between gap-2 pb-4 border-b border-border">
+                        <Text className="text-sm font-bold text-text-strong">Theme</Text>
+                        <Text className="text-text-weak text-xs">
+                            {isDark?"Dark":"Light"}
+                        </Text>
+                        <ToggleThemeButton />
+                    </View>
 
                     {/* Change Password */}
                     <View className="flex flex-col gap-2 pb-4 border-b border-border">

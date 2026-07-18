@@ -7,6 +7,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import CourseCard from "@/src/components/student/CourseCard";
 import Skeleton from "@/src/components/Skeleton";
+import ToggleThemeButton from "@/src/components/ToggleThemeButton";
 
 export default function ProfileScreen() {
     const {
@@ -329,6 +330,13 @@ export default function ProfileScreen() {
                 </Text>
                 
                 <View className="flex flex-col gap-4 pt-2">
+                    <View className="flex flex-row items-center justify-between gap-2 pb-4 border-b border-border">
+                        <Text className="text-sm font-bold text-text-strong">Theme</Text>
+                        <Text className="text-text-weak text-xs">
+                            {isDark?"Dark":"Light"}
+                        </Text>
+                        <ToggleThemeButton />
+                    </View>
                     {/* Edit Profile */}
                     <View className="flex flex-col gap-2 pb-4 border-b border-border">
                         <Text className="text-sm font-bold text-text-strong">Edit Profile</Text>
